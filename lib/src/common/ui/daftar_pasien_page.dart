@@ -1,18 +1,31 @@
+import 'package:antrian_wiradadi/src/bloc/create_antrian_bloc.dart';
 import 'package:antrian_wiradadi/src/common/source/color_style.dart';
 import 'package:antrian_wiradadi/src/common/source/size_config.dart';
-import 'package:antrian_wiradadi/src/common/widget/text_field_widget.dart';
+import 'package:antrian_wiradadi/src/common/widget/pendaftaran_baru_widget.dart';
+import 'package:antrian_wiradadi/src/common/widget/pendaftaran_lama_widget.dart';
+import 'package:antrian_wiradadi/src/model/jadwal_dokter_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_date_pickers/flutter_date_pickers.dart' as dp;
 import 'package:intl/intl.dart';
 
 class DaftarPasienPage extends StatefulWidget {
   final String label;
-  final String hari;
+  final List<Jadwal> jadwal;
+  final String idPoli;
+  final String idDokter;
+  final String namaPoli;
+  final String namaDokter;
+  final String jenisPendaftaran;
 
   const DaftarPasienPage({
     Key key,
-    this.hari,
+    this.jadwal,
     this.label,
+    this.idDokter,
+    this.idPoli,
+    this.namaDokter,
+    this.namaPoli,
+    this.jenisPendaftaran,
   }) : super(key: key);
 
   @override
@@ -20,15 +33,18 @@ class DaftarPasienPage extends StatefulWidget {
 }
 
 class _DaftarPasienPageState extends State<DaftarPasienPage> {
-  String _daySelected;
+  CreateAntrianBloc _createAntrianBloc = CreateAntrianBloc();
   DateTime _selectedDate;
   DateTime _firstDate;
   DateTime _lastDate;
+  DateFormat _format;
 
-  final FocusNode _focusNomorRm = FocusNode();
-  final FocusNode _focusNama = FocusNode();
-  final FocusNode _focusTanggalLahir = FocusNode();
-  final FocusNode _focusNomorPonsel = FocusNode();
+  static const double _min = 0.45;
+  static const double _max = 0.86;
+
+  double _initial = _min;
+  bool _isExpand = false;
+  BuildContext contextSheet;
 
   Color selectedDateStyleColor;
   Color selectedSingleDateDecorationColor;
@@ -39,14 +55,13 @@ class _DaftarPasienPageState extends State<DaftarPasienPage> {
     _selectedDate = DateTime.now().subtract(Duration(days: 1));
     _firstDate = DateTime.now().subtract(Duration(days: 2));
     _lastDate = DateTime.now().add(Duration(days: 12));
-    _daySelected = widget.hari;
+    _format = DateFormat('yyyy-MM-dd');
+    _createAntrianBloc.poli.add(widget.idPoli);
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    // defaults for styles
     selectedDateStyleColor = Theme.of(context).accentTextTheme.bodyText1.color;
     selectedSingleDateDecorationColor = Theme.of(context).accentColor;
   }
@@ -55,14 +70,17 @@ class _DaftarPasienPageState extends State<DaftarPasienPage> {
     setState(() {
       _selectedDate = newDate;
     });
+    _createAntrianBloc.tanggalKunjungan.add(_format.format(newDate));
   }
 
   bool _isSelectableCustom(DateTime day) {
     DateFormat _format = DateFormat('EEEE', 'id');
     String selectedDay = _format.format(day);
-    if ((day.isAfter(DateTime.now().subtract(Duration(days: 1)))) &&
-        (selectedDay == _daySelected)) {
-      return true;
+    for (var _day in widget.jadwal) {
+      if ((day.isAfter(DateTime.now().subtract(Duration(days: 1)))) &&
+          (selectedDay == _day.deskHari)) {
+        return true;
+      }
     }
     return false;
   }
@@ -72,13 +90,17 @@ class _DaftarPasienPageState extends State<DaftarPasienPage> {
     SizeConfig().init(context);
     dp.DatePickerStyles styles = dp.DatePickerRangeStyles(
       displayedPeriodTitle: TextStyle(fontWeight: FontWeight.bold),
-      currentDateStyle: TextStyle(color: Colors.black),
-      selectedDateStyle: Theme.of(context)
-          .accentTextTheme
-          .bodyText1
-          .copyWith(color: selectedDateStyleColor),
+      currentDateStyle: TextStyle(
+        color: Colors.black,
+      ),
+      defaultDateTextStyle: TextStyle(
+          color: Colors.indigo, fontWeight: FontWeight.w700, fontSize: 20.0),
+      selectedDateStyle: Theme.of(context).accentTextTheme.bodyText1.copyWith(
+          color: Colors.white, fontWeight: FontWeight.w700, fontSize: 18.0),
       selectedSingleDateDecoration: BoxDecoration(
-          color: selectedSingleDateDecorationColor, shape: BoxShape.circle),
+          color: Colors.indigo,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(15.0)),
     );
     return Scaffold(
       backgroundColor: Colors.white,
@@ -95,96 +117,114 @@ class _DaftarPasienPageState extends State<DaftarPasienPage> {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: ListView(
-        padding: EdgeInsets.only(top: 18.0),
-        shrinkWrap: true,
-        scrollDirection: Axis.vertical,
+      body: Stack(
         children: [
-          Container(
-            width: SizeConfig.screenWidth,
-            height: SizeConfig.blockSizeVertical * 30,
-            padding: EdgeInsets.only(top: 4.0),
-            child: dp.DayPicker.single(
-              selectedDate: _selectedDate,
-              onChanged: _onSelectedDateChanged,
-              firstDate: _firstDate,
-              lastDate: _lastDate,
-              datePickerStyles: styles,
-              selectableDayPredicate: _isSelectableCustom,
-              datePickerLayoutSettings: dp.DatePickerLayoutSettings(
-                scrollPhysics: ClampingScrollPhysics(),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 8.0,
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 18.0),
-            child: Text(
-              '*) Pilih tanggal sesuai jadwal dokter yang telah dipilih',
-              style: TextStyle(color: Colors.grey, fontSize: 11.0),
-            ),
-          ),
-          SizedBox(
-            height: 18.0,
-          ),
-          Container(
-            height: SizeConfig.blockSizeVertical * 55,
-            padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 18.0),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(22.0),
-                topRight: Radius.circular(22.0),
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey[300],
-                  blurRadius: 8.0,
-                  offset: Offset(1.0, -2.0),
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                TextFieldWidget(
-                  focus: _focusNomorRm,
-                  hint: 'Nomor RM',
-                  icon: Icon(Icons.contacts),
-                  inputAction: TextInputAction.next,
-                ),
-                TextFieldWidget(
-                  focus: _focusNama,
-                  hint: 'Nama pasien',
-                  icon: Icon(Icons.assignment_ind),
-                  inputAction: TextInputAction.next,
-                ),
-                TextFieldWidget(
-                  focus: _focusTanggalLahir,
-                  hint: 'Tanggal lahir',
-                  icon: Icon(Icons.calendar_today),
-                  inputAction: TextInputAction.next,
-                ),
-                TextFieldWidget(
-                  focus: _focusNomorPonsel,
-                  hint: 'Nomor ponsel',
-                  icon: Icon(Icons.mobile_friendly),
-                  inputAction: TextInputAction.done,
-                ),
-                SizedBox(
-                  height: 32.0,
-                ),
-                Container(
-                  width: SizeConfig.blockSizeHorizontal * 60,
-                  height: 45,
-                  child: FlatButton(
-                    onPressed: () {},
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(22.0)),
-                    color: kPrimaryColor,
-                    child: Text('Daftar'),
+              ListTile(
+                isThreeLine: true,
+                leading: Container(
+                  width: 52.0,
+                  height: 52.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        image: AssetImage('assets/images/avatar_doc.jpg'),
+                        fit: BoxFit.cover),
                   ),
-                )
-              ],
-            ),
+                ),
+                title: Text('${widget.namaDokter}'),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('${widget.namaPoli}'),
+                    SizedBox(
+                      height: 8.0,
+                    ),
+                    Row(
+                      children: widget.jadwal
+                          .map((jadwal) => Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 12.0, vertical: 4.0),
+                                child: Text(
+                                  '${jadwal.deskHari}',
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13.0,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                decoration: BoxDecoration(
+                                  color: kSecondaryColor,
+                                  borderRadius: BorderRadius.circular(18.0),
+                                ),
+                              ))
+                          .toList(),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                width: SizeConfig.screenWidth,
+                height: SizeConfig.blockSizeVertical * 30,
+                padding: EdgeInsets.only(top: 4.0),
+                child: dp.DayPicker.single(
+                  selectedDate: _selectedDate,
+                  onChanged: _onSelectedDateChanged,
+                  firstDate: _firstDate,
+                  lastDate: _lastDate,
+                  datePickerStyles: styles,
+                  selectableDayPredicate: _isSelectableCustom,
+                  datePickerLayoutSettings: dp.DatePickerLayoutSettings(
+                    scrollPhysics: ClampingScrollPhysics(),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 18.0),
+                child: Text(
+                  '*) Jadwal dokter yang ditampilkan 2 minggu kedepan\nTanggal yang aktif adalah tanggal jadwal dokter yang tersedia',
+                  style: TextStyle(color: Colors.grey, fontSize: 12.0),
+                ),
+              ),
+            ],
+          ),
+          DraggableScrollableActuator(
+            child: DraggableScrollableSheet(
+                initialChildSize: _initial,
+                minChildSize: _min,
+                maxChildSize: _max,
+                builder: (BuildContext contextSheet, scrollController) {
+                  this.contextSheet = contextSheet;
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(25.0),
+                        topRight: Radius.circular(25.0),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 18.0,
+                          offset: Offset(3.0, -1.0),
+                        ),
+                      ],
+                    ),
+                    child: widget.jenisPendaftaran == '1'
+                        ? PendaftaranLamaWidget(
+                            scrollController: scrollController,
+                          )
+                        : PendaftaranBaruWidget(
+                            scrollController: scrollController,
+                            idPoli: widget.idPoli,
+                            bloc: _createAntrianBloc,
+                          ),
+                  );
+                }),
           ),
         ],
       ),

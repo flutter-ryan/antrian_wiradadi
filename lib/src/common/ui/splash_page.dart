@@ -1,5 +1,7 @@
 import 'package:antrian_wiradadi/src/common/source/color_style.dart';
-import 'package:antrian_wiradadi/src/common/ui/login_page.dart';
+import 'package:antrian_wiradadi/src/common/ui/home_page.dart';
+import 'package:antrian_wiradadi/src/common/ui/new_home_page.dart';
+import 'package:antrian_wiradadi/src/common/ui/onboarding_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
@@ -9,12 +11,17 @@ class Splashpage extends StatefulWidget {
   _SplashpageState createState() => _SplashpageState();
 }
 
-class _SplashpageState extends State<Splashpage> {
+class _SplashpageState extends State<Splashpage>
+    with SingleTickerProviderStateMixin {
+  AnimationController animationController;
   String version;
   @override
   void initState() {
     super.initState();
     durationSplash();
+    animationController =
+        AnimationController(duration: new Duration(seconds: 2), vsync: this);
+    animationController.repeat();
   }
 
   void durationSplash() async {
@@ -23,12 +30,20 @@ class _SplashpageState extends State<Splashpage> {
       version = info.version;
     });
     Future.delayed(
-      Duration(milliseconds: 1000),
+      Duration(seconds: 3),
       () => Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => Loginpage()),
+          MaterialPageRoute(
+            builder: (context) => NewHomePage(),
+          ),
           (route) => false),
     );
+  }
+
+  @override
+  void dispose() {
+    animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -65,6 +80,15 @@ class _SplashpageState extends State<Splashpage> {
               left: 0.0,
               child: Column(
                 children: [
+                  Center(
+                    child: CircularProgressIndicator(
+                      valueColor: animationController.drive(ColorTween(
+                          begin: kPrimaryColor, end: kSecondaryColor)),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 72.0,
+                  ),
                   Text(
                     'From\nSimpel Development',
                     style: TextStyle(color: Colors.grey, fontSize: 12.0),

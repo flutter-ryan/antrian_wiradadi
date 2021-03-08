@@ -1,6 +1,6 @@
 import 'package:antrian_wiradadi/src/bloc/cara_bayar_bloc.dart';
 import 'package:antrian_wiradadi/src/bloc/token_bloc.dart';
-import 'package:antrian_wiradadi/src/common/source/size_config.dart';
+import 'package:antrian_wiradadi/src/common/source/color_style.dart';
 import 'package:antrian_wiradadi/src/common/widget/error_cara_bayar_widget.dart';
 import 'package:antrian_wiradadi/src/common/widget/skeleton_cara_bayar.dart';
 import 'package:antrian_wiradadi/src/model/cara_bayar_model.dart';
@@ -45,30 +45,36 @@ class _CaraBayarWidgetState extends State<CaraBayarWidget> {
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600),
           ),
         ),
-        StreamBuilder<ApiResponse<TokenResponseModel>>(
-          stream: _tokenBloc.tokenStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              switch (snapshot.data.status) {
-                case Status.LOADING:
-                  return SkeletonCaraBayar();
-                case Status.ERROR:
-                  return ErrorCaraBayarWidget(
-                    message: snapshot.data.message,
-                  );
-                case Status.COMPLETED:
-                  return ListCaraBayar(
-                    token: snapshot.data.data.response.token,
-                    caraBayarSelected: (BuildContext contextSheet, String id,
-                            String deskripsi) =>
-                        widget.caraBayarSelected(contextSheet, id, deskripsi),
-                  );
-              }
-            }
-            return Container();
-          },
-        ),
+        _buildStreamToken(context),
       ],
+    );
+  }
+
+  Widget _buildStreamToken(BuildContext context) {
+    return StreamBuilder<ApiResponse<TokenResponseModel>>(
+      stream: _tokenBloc.tokenStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data.status) {
+            case Status.LOADING:
+              return SkeletonCaraBayar();
+            case Status.ERROR:
+              return ErrorCaraBayarWidget(
+                message: snapshot.data.message,
+              );
+            case Status.COMPLETED:
+              if (snapshot.data.data.metadata.code == 500) {
+                return Container();
+              }
+              return ListCaraBayar(
+                token: snapshot.data.data.response.token,
+                caraBayarSelected: (String id, String deskripsi) =>
+                    widget.caraBayarSelected(id, deskripsi),
+              );
+          }
+        }
+        return Container();
+      },
     );
   }
 }
@@ -99,6 +105,16 @@ class _ListCaraBayarState extends State<ListCaraBayar> {
     _caraBayarBloc.getCaraBayar();
   }
 
+  void _pilih(CaraBayar cara) {
+    setState(() {
+      selected = cara.id;
+    });
+    Future.delayed(Duration(milliseconds: 600), () {
+      widget.caraBayarSelected(cara.id, cara.deskripsi);
+      Navigator.pop(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<ApiResponse<CaraBayarModel>>(
@@ -124,16 +140,16 @@ class _ListCaraBayarState extends State<ListCaraBayar> {
                 itemBuilder: (context, int i) {
                   var cara = snapshot.data.data.caraBayar[i];
                   return ListTile(
-                    onTap: () {
-                      setState(() {
-                        selected = cara.id;
-                      });
-                      widget.caraBayarSelected(
-                          context, cara.id, cara.deskripsi);
-                    },
+                    onTap: () => _pilih(cara),
                     contentPadding: EdgeInsets.symmetric(horizontal: 32.0),
                     leading: Icon(Icons.credit_card),
                     title: Text('${cara.deskripsi}'),
+                    trailing: selected == cara.id
+                        ? Icon(
+                            Icons.check,
+                            color: kSecondaryColor,
+                          )
+                        : null,
                   );
                 },
               );

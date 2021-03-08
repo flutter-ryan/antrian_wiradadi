@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 PoliklinikModel poliklinikModelFromJson(dynamic str) =>
     PoliklinikModel.fromJson(str);
 

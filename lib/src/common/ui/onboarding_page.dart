@@ -1,8 +1,9 @@
 import 'package:antrian_wiradadi/src/common/source/color_style.dart';
 import 'package:antrian_wiradadi/src/common/source/size_config.dart';
 import 'package:antrian_wiradadi/src/common/source/slide_left_route.dart';
-import 'package:antrian_wiradadi/src/common/ui/home_page.dart';
+import 'package:antrian_wiradadi/src/common/ui/new_home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Onboardingpage extends StatefulWidget {
   @override
@@ -23,7 +24,7 @@ class _OnboardingpageState extends State<Onboardingpage> {
       subtitle: 'Pilih tanggal sesuai jadwal dokter yang tersedia',
     ),
     ScreenIntro(
-      image: 'assets/images/onboarding_1.png',
+      image: 'assets/images/antri.png',
       title: 'Tidak Perlu Antri',
       subtitle: 'Anda tidak perlu lagi antri saat pendaftaran diloket',
     ),
@@ -34,6 +35,17 @@ class _OnboardingpageState extends State<Onboardingpage> {
   void getChangedPageAndMoveBar(int page) {
     currentPageValue = page;
     setState(() {});
+  }
+
+  void _mulai() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    _prefs.setString('onboarding', 'yes');
+    Navigator.pushAndRemoveUntil(
+        context,
+        SlideLeftRoute(
+          page: NewHomePage(),
+        ),
+        (route) => false);
   }
 
   @override
@@ -82,28 +94,33 @@ class _OnboardingpageState extends State<Onboardingpage> {
                       visible: currentPageValue == _introList.length - 1
                           ? true
                           : false,
-                      child: FlatButton(
+                      child: TextButton(
                         onPressed: () => Navigator.pushAndRemoveUntil(
                             context,
                             SlideLeftRoute(
-                              page: Homepage(),
+                              page: NewHomePage(),
                             ),
                             (route) => false),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8.0),
+                        style: TextButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Mulai'),
-                            SizedBox(
-                              width: 4.0,
-                            ),
-                            Icon(
-                              Icons.chevron_right,
-                              size: 18.0,
-                            ),
-                          ],
+                        child: InkWell(
+                          onTap: _mulai,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Mulai'),
+                              SizedBox(
+                                width: 4.0,
+                              ),
+                              Icon(
+                                Icons.chevron_right,
+                                size: 18.0,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -147,39 +164,66 @@ class ScreenIntro extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: SizeConfig.blockSizeHorizontal * 90,
-          height: SizeConfig.blockSizeVertical * 30,
-          decoration: BoxDecoration(
-              image: DecorationImage(
-            image: AssetImage('$image'),
-          )),
-        ),
-        SizedBox(
-          height: 52.0,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: Text(
-            '$title',
-            style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w700),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 28.0),
+      child: Column(
+        children: [
+          Hero(
+            tag: 'logoHero',
+            child: Container(
+              height: 100,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/logo.png'),
+                ),
+              ),
+            ),
           ),
-        ),
-        SizedBox(
-          height: 12.0,
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: Text(
-            '$subtitle',
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16.0),
+          SizedBox(
+            height: 15.0,
           ),
-        ),
-      ],
+          Text(
+            'Antrian Online',
+            style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+          ),
+          Text(
+            'RSU Wiradadi Husada',
+            style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+          ),
+          SizedBox(
+            height: 60,
+          ),
+          Container(
+            width: SizeConfig.blockSizeHorizontal * 80,
+            height: SizeConfig.blockSizeVertical * 30,
+            decoration: BoxDecoration(
+                image: DecorationImage(
+              image: AssetImage('$image'),
+            )),
+          ),
+          SizedBox(
+            height: 52.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Text(
+              '$title',
+              style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w700),
+            ),
+          ),
+          SizedBox(
+            height: 12.0,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 32.0),
+            child: Text(
+              '$subtitle',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 16.0),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

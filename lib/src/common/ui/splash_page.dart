@@ -1,10 +1,10 @@
 import 'package:antrian_wiradadi/src/common/source/color_style.dart';
-import 'package:antrian_wiradadi/src/common/ui/home_page.dart';
 import 'package:antrian_wiradadi/src/common/ui/new_home_page.dart';
 import 'package:antrian_wiradadi/src/common/ui/onboarding_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Splashpage extends StatefulWidget {
   @override
@@ -29,15 +29,29 @@ class _SplashpageState extends State<Splashpage>
     setState(() {
       version = info.version;
     });
-    Future.delayed(
-      Duration(seconds: 3),
-      () => Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(
-            builder: (context) => NewHomePage(),
-          ),
-          (route) => false),
-    );
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    String onboarding = _prefs.get('onboarding');
+    if (onboarding != null) {
+      Future.delayed(
+        Duration(seconds: 3),
+        () => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NewHomePage(),
+            ),
+            (route) => false),
+      );
+    } else {
+      Future.delayed(
+        Duration(seconds: 3),
+        () => Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) => Onboardingpage(),
+            ),
+            (route) => false),
+      );
+    }
   }
 
   @override

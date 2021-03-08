@@ -25,7 +25,7 @@ class PoliklinikBloc {
     try {
       PoliklinikModel poliModel = await _repo.poli(token);
       Future.delayed(
-        Duration(seconds: 2),
+        Duration(seconds: 1),
         () => poliSink.add(ApiResponse.completed(poliModel)),
       );
     } catch (e) {

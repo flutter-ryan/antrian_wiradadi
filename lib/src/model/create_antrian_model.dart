@@ -11,6 +11,7 @@ class CreateAntrianModel {
   String contact;
   String poli;
   String carabayar;
+  String idJadwal;
   String tanggalkunjugan;
   int jenisAplikasi;
   int status;
@@ -23,6 +24,7 @@ class CreateAntrianModel {
     this.contact,
     this.poli,
     this.carabayar,
+    this.idJadwal,
     this.tanggalkunjugan,
     this.jenisAplikasi,
     this.status,
@@ -36,6 +38,7 @@ class CreateAntrianModel {
         "CONTACT": contact,
         "POLI": poli,
         "CARABAYAR": carabayar,
+        "JADWAL_DOKTER": idJadwal,
         "TANGGALKUNJUNGAN": tanggalkunjugan,
         "JENIS_APLIKASI": jenisAplikasi,
         "STATUS": status,
@@ -46,33 +49,32 @@ ResponseCreateAntrianModel responseCreateAntrianModelFromJson(dynamic str) =>
     ResponseCreateAntrianModel.fromJson(str);
 
 class ResponseCreateAntrianModel {
-  bool success;
-  Response response;
-  Metadata metadata;
-
   ResponseCreateAntrianModel({
     this.success,
     this.response,
     this.metadata,
   });
 
+  bool success;
+  Antrian response;
+  Metadata metadata;
+
   factory ResponseCreateAntrianModel.fromJson(Map<String, dynamic> json) =>
       ResponseCreateAntrianModel(
         success: json["success"],
-        response:
-            json["response"] == "" ? null : Response.fromJson(json["response"]),
-        metadata: Metadata.fromJson(json["metadata"]),
+        response: Antrian?.fromJson(json["response"]),
+        metadata: Metadata?.fromJson(json["metadata"]),
       );
 }
 
 class Metadata {
-  String message;
-  int code;
-
   Metadata({
     this.message,
     this.code,
   });
+
+  String message;
+  int code;
 
   factory Metadata.fromJson(Map<String, dynamic> json) => Metadata(
         message: json["message"],
@@ -80,18 +82,8 @@ class Metadata {
       );
 }
 
-class Response {
-  String nomorantrean;
-  String kodebooking;
-  int jenisantrean;
-  int estimasidilayani;
-  String tanggalkunjungan;
-  String jamkunjungan;
-  String namapoli;
-  String namadokter;
-  String namapasien;
-
-  Response({
+class Antrian {
+  Antrian({
     this.nomorantrean,
     this.kodebooking,
     this.jenisantrean,
@@ -101,9 +93,23 @@ class Response {
     this.namapoli,
     this.namadokter,
     this.namapasien,
+    this.selisih,
+    this.jadwaldokter,
   });
 
-  factory Response.fromJson(Map<String, dynamic> json) => Response(
+  String nomorantrean;
+  String kodebooking;
+  int jenisantrean;
+  int estimasidilayani;
+  String tanggalkunjungan;
+  String jamkunjungan;
+  String namapoli;
+  String namadokter;
+  String namapasien;
+  int selisih;
+  Jadwaldokter jadwaldokter;
+
+  factory Antrian.fromJson(Map<String, dynamic> json) => Antrian(
         nomorantrean: json["nomorantrean"],
         kodebooking: json["kodebooking"],
         jenisantrean: json["jenisantrean"],
@@ -111,6 +117,48 @@ class Response {
         tanggalkunjungan: json["tanggalkunjungan"],
         jamkunjungan: json["jamkunjungan"],
         namapoli: json["namapoli"],
+        namadokter: json["namadokter"],
         namapasien: json["namapasien"],
+        selisih: json["selisih"],
+        jadwaldokter: Jadwaldokter?.fromJson(json["jadwaldokter"]),
+      );
+}
+
+class Jadwaldokter {
+  Jadwaldokter({
+    this.id,
+    this.dokter,
+    this.ruangan,
+    this.hari,
+    this.mulai,
+    this.selesai,
+    this.status,
+    this.deskHari,
+    this.namaDokter,
+    this.jenisKelamin,
+  });
+
+  String id;
+  String dokter;
+  String ruangan;
+  String hari;
+  String mulai;
+  String selesai;
+  String status;
+  String deskHari;
+  String namaDokter;
+  String jenisKelamin;
+
+  factory Jadwaldokter.fromJson(Map<String, dynamic> json) => Jadwaldokter(
+        id: json["ID"],
+        dokter: json["DOKTER"],
+        ruangan: json["RUANGAN"],
+        hari: json["HARI"],
+        mulai: json["MULAI"],
+        selesai: json["SELESAI"],
+        status: json["STATUS"],
+        deskHari: json["DESK_HARI"],
+        namaDokter: json["NAMA_DOKTER"],
+        jenisKelamin: json["JENIS_KELAMIN"],
       );
 }

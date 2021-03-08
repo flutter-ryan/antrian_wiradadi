@@ -1,4 +1,3 @@
-import 'package:antrian_wiradadi/src/common/source/size_config.dart';
 import 'package:flutter/material.dart';
 
 class ErrorPoliWidget extends StatelessWidget {

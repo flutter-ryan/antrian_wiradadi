@@ -1,10 +1,11 @@
 import 'dart:async';
+import 'package:antrian_wiradadi/src/bloc/validation/input_validation.dart';
 import 'package:antrian_wiradadi/src/model/create_antrian_model.dart';
 import 'package:antrian_wiradadi/src/repository/create_antrian_repo.dart';
 import 'package:antrian_wiradadi/src/repository/responseApi/api_response.dart';
 import 'package:rxdart/rxdart.dart';
 
-class CreateAntrianBloc {
+class CreateAntrianBloc extends Object with InputValidation {
   CreateAntrianRepo _repoCreate = CreateAntrianRepo();
 
   StreamController _streamCreate;
@@ -22,6 +23,7 @@ class CreateAntrianBloc {
       BehaviorSubject<String>();
   final BehaviorSubject<String> _tanggalKunjunganPasienController =
       BehaviorSubject<String>();
+  final BehaviorSubject<String> _idJadwalController = BehaviorSubject<String>();
 
   StreamSink<String> get tokenSink => _tokenCon.sink;
   StreamSink<String> get poli => _idPoliController.sink;
@@ -33,6 +35,7 @@ class CreateAntrianBloc {
   StreamSink<String> get nomorKontak => _nomorKontakPasienController.sink;
   StreamSink<String> get tanggalKunjungan =>
       _tanggalKunjunganPasienController.sink;
+  StreamSink<String> get idJadwalSink => _idJadwalController.sink;
   StreamSink<ApiResponse<ResponseCreateAntrianModel>> get createAntrianSink =>
       _streamCreate.sink;
 
@@ -40,11 +43,15 @@ class CreateAntrianBloc {
   Stream<String> get idCaraBayarStream => _idCaraBayarController.stream;
   Stream<String> get nomorRmStream => _normController.stream;
   Stream<String> get jenisStream => _idJenisController.stream;
-  Stream<String> get namaStream => _namaPasienController.stream;
-  Stream<String> get tanggalLahirStream => _tanggalLahirPasienController.stream;
-  Stream<String> get nomorStream => _nomorKontakPasienController.stream;
+  Stream<String> get namaStream =>
+      _namaPasienController.stream.transform(namaValidate);
+  Stream<String> get tanggalLahirStream =>
+      _tanggalLahirPasienController.stream.transform(tanggalLahirValidate);
+  Stream<String> get nomorStream =>
+      _nomorKontakPasienController.stream.transform(kontakValidate);
   Stream<String> get tanggalKunjunganStream =>
       _tanggalKunjunganPasienController.stream;
+  Stream<String> get idJadwalStream => _idJadwalController.stream;
   Stream<ApiResponse<ResponseCreateAntrianModel>> get createAntrianStream =>
       _streamCreate.stream;
 
@@ -55,6 +62,8 @@ class CreateAntrianBloc {
         namaStream,
         tanggalLahirStream,
         nomorStream,
+        tanggalKunjunganStream,
+        idJadwalStream
       ], (_) => true);
 
   Stream<bool> get submitLama => Rx.combineLatest([
@@ -62,9 +71,11 @@ class CreateAntrianBloc {
         idCaraBayarStream,
         jenisStream,
         nomorRmStream,
+        namaStream,
         tanggalLahirStream,
         nomorStream,
-        tanggalKunjunganStream
+        tanggalKunjunganStream,
+        idJadwalStream
       ], (values) => true);
 
   createAntrian() {
@@ -78,6 +89,7 @@ class CreateAntrianBloc {
     final tanggalLahirPasien = _tanggalLahirPasienController.value;
     final nomorKontakPasien = _nomorKontakPasienController.value;
     final tanggalKunjunganpasien = _tanggalKunjunganPasienController.value;
+    final idJadwal = _idJadwalController.value;
 
     CreateAntrianModel createAntrianModel = CreateAntrianModel(
         jenis: '$idJenis',
@@ -87,6 +99,7 @@ class CreateAntrianBloc {
         contact: '$nomorKontakPasien',
         poli: '$idPoli',
         carabayar: '$idCaraBayar',
+        idJadwal: '$idJadwal',
         tanggalkunjugan: '$tanggalKunjunganpasien',
         jenisAplikasi: 1,
         status: 1);
@@ -100,9 +113,19 @@ class CreateAntrianBloc {
     try {
       ResponseCreateAntrianModel resultCreate =
           await _repoCreate.createdAntrian(createAntrianModel, token);
-      createAntrianSink.add(ApiResponse.completed(resultCreate));
+      Future.delayed(
+        Duration(milliseconds: 1000),
+        () {
+          createAntrianSink.add(ApiResponse.completed(resultCreate));
+        },
+      );
     } catch (e) {
-      createAntrianSink.add(ApiResponse.error(e.toString()));
+      Future.delayed(
+        Duration(milliseconds: 1000),
+        () {
+          createAntrianSink.add(ApiResponse.error(e.toString()));
+        },
+      );
     }
   }
 
@@ -117,5 +140,6 @@ class CreateAntrianBloc {
     _tanggalLahirPasienController?.close();
     _nomorKontakPasienController?.close();
     _tanggalKunjunganPasienController?.close();
+    _idJadwalController?.close();
   }
 }

@@ -26,11 +26,15 @@ class TokenBloc {
     tokenSink.add(ApiResponse.loading('Memuat...'));
     try {
       final res = await _repo.token(token);
-      tokenSink.add(ApiResponse.completed(res));
+      Future.delayed(Duration(milliseconds: 500), () {
+        tokenSink.add(ApiResponse.completed(res));
+      });
     } catch (e) {
-      tokenSink.add(
-        ApiResponse.error(e.toString()),
-      );
+      Future.delayed(Duration(milliseconds: 500), () {
+        tokenSink.add(
+          ApiResponse.error(e.toString()),
+        );
+      });
     }
   }
 

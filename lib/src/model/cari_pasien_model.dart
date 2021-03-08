@@ -18,8 +18,8 @@ class CariPasienModel {
       };
 }
 
-ResponseCariPasienModel responseCariPasienModelFromJson(String str) =>
-    ResponseCariPasienModel.fromJson(json.decode(str));
+ResponseCariPasienModel responseCariPasienModelFromJson(dynamic str) =>
+    ResponseCariPasienModel.fromJson(str);
 
 class ResponseCariPasienModel {
   bool success;
@@ -36,7 +36,11 @@ class ResponseCariPasienModel {
       ResponseCariPasienModel(
         success: json["success"],
         total: json["total"],
-        pasien: List<Pasien>.from(json["data"].map((x) => Pasien.fromJson(x))),
+        pasien: json["data"] == null ||
+                json["data"] == "" ||
+                json["data"].length == 0
+            ? null
+            : List<Pasien>.from(json["data"].map((x) => Pasien.fromJson(x))),
       );
 }
 

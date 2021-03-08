@@ -5,11 +5,12 @@ class SkeletonCaraBayar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
+      shrinkWrap: true,
       padding: EdgeInsets.symmetric(vertical: 18.0),
       separatorBuilder: (context, int t) {
         return Divider();
       },
-      itemCount: 5,
+      itemCount: 4,
       itemBuilder: (context, int i) {
         return ListTile(
           contentPadding: EdgeInsets.symmetric(horizontal: 32.0),

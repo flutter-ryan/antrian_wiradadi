@@ -32,7 +32,7 @@ class JadwalDokterBloc {
     try {
       final res = await _repo.getJadwal(token, idPoli);
       Future.delayed(
-        Duration(seconds: 2),
+        Duration(seconds: 1),
         () => jadwalSink.add(ApiResponse.completed(res)),
       );
     } catch (e) {

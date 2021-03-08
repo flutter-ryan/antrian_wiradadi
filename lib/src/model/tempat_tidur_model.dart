@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 TempatTidurModel tempatTidurModelFromJson(dynamic str) =>
     TempatTidurModel.fromJson(str);
 
@@ -11,14 +9,14 @@ class TempatTidurModel {
   });
 
   bool success;
-  List<Response> response;
+  List<TempatTidur> response;
   Metadata metadata;
 
   factory TempatTidurModel.fromJson(Map<String, dynamic> json) =>
       TempatTidurModel(
         success: json["success"],
-        response: List<Response>.from(
-            json["response"].map((x) => Response.fromJson(x))),
+        response: List<TempatTidur>.from(
+            json["response"].map((x) => TempatTidur.fromJson(x))),
         metadata: Metadata.fromJson(json["metadata"]),
       );
 }
@@ -38,8 +36,8 @@ class Metadata {
       );
 }
 
-class Response {
-  Response({
+class TempatTidur {
+  TempatTidur({
     this.kamar,
     this.kosong,
     this.terisi,
@@ -51,7 +49,7 @@ class Response {
   String terisi;
   String total;
 
-  factory Response.fromJson(Map<String, dynamic> json) => Response(
+  factory TempatTidur.fromJson(Map<String, dynamic> json) => TempatTidur(
         kamar: json["KAMAR"],
         kosong: json["KOSONG"],
         terisi: json["TERISI"],

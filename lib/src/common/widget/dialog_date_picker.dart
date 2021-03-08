@@ -45,7 +45,9 @@ class _DialogDatePickerState extends State<DialogDatePicker> {
     DateFormat _format = DateFormat('yyyy-MM-dd', 'id');
     String selectedDay = _format.format(day);
     String now = _format.format(DateTime.now());
-    if (day.weekday == int.parse(weekday) + 1 || selectedDay == now) {
+    if ((day.weekday == int.parse(weekday) + 1 &&
+            day.isAfter(DateTime.now())) ||
+        selectedDay == now) {
       return true;
     }
     return false;
@@ -158,10 +160,12 @@ class _DialogDatePickerState extends State<DialogDatePicker> {
                             _dateActiveDesire(day, widget.weekday),
                         datePickerStyles: styles,
                         datePickerLayoutSettings: dp.DatePickerLayoutSettings(
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 0.0, vertical: 0.0)
-                            // scrollPhysics: NeverScrollableScrollPhysics(),
-                            ),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 0.0,
+                            vertical: 0.0,
+                          ),
+                          scrollPhysics: NeverScrollableScrollPhysics(),
+                        ),
                       ),
                     ),
                   ),
@@ -171,15 +175,18 @@ class _DialogDatePickerState extends State<DialogDatePicker> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      FlatButton(
+                      TextButton(
                         onPressed: () => Navigator.pop(context),
-                        textColor: Colors.blueGrey,
+                        style: TextButton.styleFrom(
+                            textStyle: TextStyle(
+                          color: Colors.blueGrey,
+                        )),
                         child: Text('Tutup'),
                       ),
-                      FlatButton(
+                      TextButton(
                         onPressed: () {
-                          if (_selectedDate.weekday ==
-                              int.parse(widget.weekday) + 1) {
+                          if ((_selectedDate.weekday ==
+                              int.parse(widget.weekday) + 1)) {
                             Navigator.pop(
                               context,
                               _format.format(_selectedDate),
@@ -195,7 +202,10 @@ class _DialogDatePickerState extends State<DialogDatePicker> {
                             });
                           }
                         },
-                        textColor: Colors.blueGrey,
+                        style: TextButton.styleFrom(
+                            textStyle: TextStyle(
+                          color: Colors.blueGrey,
+                        )),
                         child: Text('Pilih'),
                       )
                     ],

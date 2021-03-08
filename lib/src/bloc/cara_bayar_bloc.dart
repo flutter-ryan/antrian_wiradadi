@@ -24,9 +24,13 @@ class CaraBayarBloc {
     caraBayarSink.add(ApiResponse.loading('Memuat...'));
     try {
       CaraBayarModel caraModel = await _repo.caraBayar(token);
-      caraBayarSink.add(ApiResponse.completed(caraModel));
+      Future.delayed(Duration(milliseconds: 1000), () {
+        caraBayarSink.add(ApiResponse.completed(caraModel));
+      });
     } catch (e) {
-      caraBayarSink.add(ApiResponse.error(e.toString()));
+      Future.delayed(Duration(milliseconds: 1000), () {
+        caraBayarSink.add(ApiResponse.error(e.toString()));
+      });
     }
   }
 

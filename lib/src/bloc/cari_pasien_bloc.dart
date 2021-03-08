@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:antrian_wiradadi/src/bloc/validation/input_validation.dart';
 import 'package:antrian_wiradadi/src/model/cari_pasien_model.dart';
 import 'package:antrian_wiradadi/src/repository/cari_pasien_repo.dart';
 import 'package:antrian_wiradadi/src/repository/responseApi/api_response.dart';
 import 'package:rxdart/rxdart.dart';
 
-class CariPasienBloc {
+class CariPasienBloc extends Object with InputValidation {
   CariPasienRepo _repoCari = CariPasienRepo();
   StreamController _streamCari;
 
@@ -19,8 +20,15 @@ class CariPasienBloc {
   StreamSink<ApiResponse<ResponseCariPasienModel>> get cariPasienSink =>
       _streamCari.sink;
 
+  Stream<String> get noRmStream =>
+      _normController.stream.transform(noRmValidate);
+  Stream<String> get tanggalLahirStream =>
+      _tanggalLahirController.stream.transform(tanggalLahirValidate);
   Stream<ApiResponse<ResponseCariPasienModel>> get cariPasienStream =>
       _streamCari.stream;
+
+  Stream<bool> get submitStream =>
+      Rx.combineLatest([noRmStream, tanggalLahirStream], (_) => true);
 
   cariPasien() {
     _streamCari = StreamController<ApiResponse<ResponseCariPasienModel>>();
@@ -39,9 +47,13 @@ class CariPasienBloc {
     try {
       ResponseCariPasienModel responseCari =
           await _repoCari.cariPasien(cariModel, token);
-      cariPasienSink.add(ApiResponse.completed(responseCari));
+      Future.delayed(Duration(milliseconds: 1000), () {
+        cariPasienSink.add(ApiResponse.completed(responseCari));
+      });
     } catch (e) {
-      cariPasienSink.add(ApiResponse.error(e.toString()));
+      Future.delayed(Duration(milliseconds: 1000), () {
+        cariPasienSink.add(ApiResponse.error(e.toString()));
+      });
     }
   }
 

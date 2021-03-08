@@ -7,6 +7,7 @@ import 'package:antrian_wiradadi/src/model/poliklinik_model.dart';
 import 'package:antrian_wiradadi/src/repository/responseApi/api_response.dart';
 import 'package:flutter/material.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class StreamPoliWidget extends StatefulWidget {
   final String token;
@@ -15,6 +16,7 @@ class StreamPoliWidget extends StatefulWidget {
   final Function pilihPoli;
   final bool initial;
   final String idPoli;
+  final List<TargetFocus> targets;
 
   const StreamPoliWidget({
     Key key,
@@ -24,6 +26,7 @@ class StreamPoliWidget extends StatefulWidget {
     this.pilihPoli,
     this.idPoli,
     this.initial,
+    this.targets,
   }) : super(key: key);
 
   @override
@@ -32,12 +35,52 @@ class StreamPoliWidget extends StatefulWidget {
 
 class _StreamPoliWidgetState extends State<StreamPoliWidget> {
   PoliklinikBloc _poliklinikBloc = PoliklinikBloc();
+  GlobalKey poliKey = GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _poliklinikBloc.tokenSink.add(widget.token);
     _poliklinikBloc.getPoli();
+    _initTargets();
+  }
+
+  void _initTargets() {
+    widget.targets.add(
+      TargetFocus(
+        identify: "Poliklinik",
+        keyTarget: poliKey,
+        shape: ShapeLightFocus.RRect,
+        radius: 12.0,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Daftar Poliklinik",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Tap pada bagian ini untuk memilih poliklinik yang ingin Anda kunjungi",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -77,6 +120,8 @@ class _StreamPoliWidgetState extends State<StreamPoliWidget> {
                   pilihPoli: (String idPoli) => widget.pilihPoli(idPoli),
                   idPoli: widget.idPoli,
                   initial: widget.initial,
+                  poliKey: poliKey,
+                  targets: widget.targets,
                 );
             }
           }
@@ -95,6 +140,8 @@ class ListPoliWidget extends StatefulWidget {
   final Function pilihPoli;
   final bool initial;
   final String idPoli;
+  final GlobalKey poliKey;
+  final List<TargetFocus> targets;
 
   const ListPoliWidget({
     Key key,
@@ -105,6 +152,8 @@ class ListPoliWidget extends StatefulWidget {
     this.pilihPoli,
     this.initial,
     this.idPoli,
+    this.poliKey,
+    this.targets,
   }) : super(key: key);
   @override
   _ListPoliWidgetState createState() => _ListPoliWidgetState();
@@ -140,6 +189,7 @@ class _ListPoliWidgetState extends State<ListPoliWidget> {
                 controller: widget.scrollController,
                 index: int.parse(poli.id),
                 child: Container(
+                  key: i == 0 ? widget.poliKey : null,
                   width: 140.0,
                   decoration: BoxDecoration(
                     color: widget.initial && i == 0
@@ -215,6 +265,7 @@ class _ListPoliWidgetState extends State<ListPoliWidget> {
             child: StreamJadwalWidget(
               token: widget.token,
               idPoli: widget.idPoli == null ? widget.poli[0].id : widget.idPoli,
+              targets: widget.targets,
             ),
           ),
         )

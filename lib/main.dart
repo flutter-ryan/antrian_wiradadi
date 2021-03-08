@@ -1,5 +1,4 @@
 import 'package:antrian_wiradadi/src/common/source/color_style.dart';
-import 'package:antrian_wiradadi/src/common/ui/onboarding_page.dart';
 import 'package:antrian_wiradadi/src/common/ui/splash_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +16,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Rubik',
-        primaryColor: kSecondaryColor,
+        primaryColor: Colors.blue,
+        focusColor: Colors.blue,
         accentColor: kSecondaryColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),

@@ -22,10 +22,13 @@ class TempatTidurBloc {
     tempatTidurSink.add(ApiResponse.loading("Memuat..."));
     try {
       final res = await _repo.getTempatTidur(token);
-
-      tempatTidurSink.add(ApiResponse.completed(res));
+      Future.delayed(Duration(milliseconds: 1000), () {
+        tempatTidurSink.add(ApiResponse.completed(res));
+      });
     } catch (e) {
-      tempatTidurSink.add(ApiResponse.error(e.toString()));
+      Future.delayed(Duration(milliseconds: 1000), () {
+        tempatTidurSink.add(ApiResponse.error(e.toString()));
+      });
     }
   }
 

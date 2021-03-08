@@ -7,11 +7,10 @@ class DioBaseHelper {
     BaseOptions options = new BaseOptions(
       baseUrl: 'http://103.255.241.218:88/webservice/registrasionline/plugins/',
       headers: {
-        "Content-type": "application/json",
         "Accept": "application/json",
       },
-      connectTimeout: 30000,
-      receiveTimeout: 60000,
+      connectTimeout: 50000,
+      receiveTimeout: 80000,
     );
     dio = new Dio(options);
   }
@@ -41,7 +40,9 @@ class DioBaseHelper {
       String url, String request, bool type, String token) async {
     var responseJson;
     try {
-      dio.options.headers['x-token'] = token;
+      if (type) {
+        dio.options.headers['x-token'] = token;
+      }
       final response = await dio.post('$url', data: request);
       responseJson = response.data;
     } on DioError catch (e) {
@@ -53,6 +54,7 @@ class DioBaseHelper {
       } else if (e.type == DioErrorType.RESPONSE) {
         _returnResponse(e.response);
       }
+      print(e.message);
       throw ErrorNoCodeException("Server unreachable");
     }
     return responseJson;

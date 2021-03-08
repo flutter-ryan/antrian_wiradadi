@@ -1,13 +1,9 @@
-import 'package:antrian_wiradadi/src/bloc/jadwal_dokter_bloc.dart';
-import 'package:antrian_wiradadi/src/bloc/poliklinik_bloc.dart';
 import 'package:antrian_wiradadi/src/bloc/token_bloc.dart';
 import 'package:antrian_wiradadi/src/common/source/color_style.dart';
 import 'package:antrian_wiradadi/src/common/source/size_config.dart';
 import 'package:antrian_wiradadi/src/common/widget/error_poli_widget.dart';
-import 'package:antrian_wiradadi/src/common/widget/skeleton_jadwal_widget.dart';
 import 'package:antrian_wiradadi/src/common/widget/skeleton_poli_widget.dart';
 import 'package:antrian_wiradadi/src/common/widget/stream_poli_widget.dart';
-import 'package:antrian_wiradadi/src/model/jadwal_dokter_model.dart';
 import 'package:antrian_wiradadi/src/model/poliklinik_model.dart';
 import 'package:antrian_wiradadi/src/model/token_model.dart';
 import 'package:antrian_wiradadi/src/repository/responseApi/api_response.dart';
@@ -15,13 +11,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:search_page/search_page.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class NewBodyWidget extends StatefulWidget {
   final double height;
+  final List<TargetFocus> targets;
 
   const NewBodyWidget({
     Key key,
     this.height,
+    this.targets,
   }) : super(key: key);
   @override
   _NewBodyWidgetState createState() => _NewBodyWidgetState();
@@ -30,6 +29,8 @@ class NewBodyWidget extends StatefulWidget {
 class _NewBodyWidgetState extends State<NewBodyWidget> {
   AutoScrollController _scrollController = AutoScrollController();
   TokenBloc _tokenBloc = TokenBloc();
+  GlobalKey searchKey = GlobalKey();
+
   List<Poliklinik> _listPoli = [];
   String idPoli;
   bool initial = true;
@@ -38,6 +39,7 @@ class _NewBodyWidgetState extends State<NewBodyWidget> {
   void initState() {
     super.initState();
     _tokenBloc.getToken();
+    _initTargets();
   }
 
   void _pilihPoli(String id) {
@@ -61,6 +63,12 @@ class _NewBodyWidgetState extends State<NewBodyWidget> {
           searchLabel: 'Pencarian Poliklinik',
           suggestion: _buildSuggestions(context, _listPoli),
           failure: _buildFailure(context),
+          barTheme: ThemeData(
+            hintColor: Colors.grey,
+            brightness: Brightness.light,
+            primaryColor: kPrimaryColor,
+            accentColor: kPrimaryColor,
+          ),
           filter: (poli) => [
             poli.deskripsi,
           ],
@@ -88,6 +96,44 @@ class _NewBodyWidgetState extends State<NewBodyWidget> {
     }
   }
 
+  void _initTargets() {
+    widget.targets.add(
+      TargetFocus(
+        identify: "Pencarian",
+        keyTarget: searchKey,
+        shape: ShapeLightFocus.RRect,
+        radius: 22,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Pencarian",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        fontSize: 20.0),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 10.0),
+                    child: Text(
+                      "Tap pada bagian ini untuk melakukan pencarian poliklinik",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   void dispose() {
     _tokenBloc.dispose();
@@ -106,6 +152,7 @@ class _NewBodyWidgetState extends State<NewBodyWidget> {
           InkWell(
             onTap: _searchPoli,
             child: Container(
+              key: searchKey,
               height: 45.0,
               margin: EdgeInsets.symmetric(horizontal: 18.0),
               padding: EdgeInsets.symmetric(horizontal: 18.0),
@@ -166,6 +213,7 @@ class _NewBodyWidgetState extends State<NewBodyWidget> {
                 pilihPoli: (String idPoli) => _pilihPoli(idPoli),
                 idPoli: idPoli,
                 initial: initial,
+                targets: widget.targets,
               );
           }
         }
@@ -202,7 +250,7 @@ class _NewBodyWidgetState extends State<NewBodyWidget> {
                     Navigator.pop(context, poli);
                   });
                 },
-                leading: Icon(Icons.paste),
+                leading: Icon(Icons.history),
                 title: Text(poli.deskripsi),
               );
             },

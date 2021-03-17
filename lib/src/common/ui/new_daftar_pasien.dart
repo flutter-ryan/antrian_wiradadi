@@ -109,6 +109,13 @@ class _NewDaftarPasienState extends State<NewDaftarPasien> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(
+          15.0,
+        ),
+        topRight: Radius.circular(15.0),
+      )),
       builder: (context) {
         return CaraBayarWidget(
           caraBayarSelected: (String id, String deskripsi) =>
@@ -158,8 +165,10 @@ class _NewDaftarPasienState extends State<NewDaftarPasien> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.white,
+        systemNavigationBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
@@ -320,8 +329,7 @@ class _NewDaftarPasienState extends State<NewDaftarPasien> {
                         bottomRight: Radius.circular(6.0),
                       ),
                     ),
-                    backgroundColor: Colors.blue,
-                    primary: Colors.white),
+                    primary: kSecondaryColor),
                 child: Text('Ganti'),
               ),
             ),
@@ -452,6 +460,7 @@ class _NewDaftarPasienState extends State<NewDaftarPasien> {
                   ? kPrimaryColor
                   : kPrimaryColor.withAlpha(80),
               primary: Colors.black,
+              onSurface: Colors.grey[400],
             ),
             child: Text('Daftar Sekarang'),
           ),
@@ -773,9 +782,9 @@ class _InputFormWidgetState extends State<InputFormWidget> {
         builder: (context, Widget child) {
           return Theme(
               data: ThemeData.light().copyWith(
-                primaryColor: Colors.redAccent,
-                accentColor: Colors.redAccent,
-                colorScheme: ColorScheme.light(primary: Colors.redAccent),
+                primaryColor: kSecondaryColor,
+                accentColor: kSecondaryColor,
+                colorScheme: ColorScheme.light(primary: kSecondaryColor),
                 buttonTheme:
                     ButtonThemeData(textTheme: ButtonTextTheme.primary),
               ),

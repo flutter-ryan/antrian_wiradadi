@@ -3,25 +3,33 @@ import 'package:flutter/material.dart';
 
 class ErrorCaraBayarWidget extends StatelessWidget {
   final String message;
+  final String image;
+  final Widget button;
 
   const ErrorCaraBayarWidget({
     Key key,
     this.message,
+    this.image,
+    this.button,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Center(
+    return Container(
+      height: SizeConfig.blockSizeVertical * 50,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            width: 200,
             height: 180,
             decoration: BoxDecoration(
                 image: DecorationImage(
-              image: AssetImage('assets/images/server_error.png'),
+              image: AssetImage('$image'),
             )),
+          ),
+          SizedBox(
+            height: 18.0,
           ),
           Text(
             '$message',
@@ -32,6 +40,10 @@ class ErrorCaraBayarWidget extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
+          SizedBox(
+            height: 22.0,
+          ),
+          button,
         ],
       ),
     );

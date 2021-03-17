@@ -3,6 +3,7 @@ import 'package:antrian_wiradadi/src/common/source/size_config.dart';
 import 'package:antrian_wiradadi/src/common/source/slide_left_route.dart';
 import 'package:antrian_wiradadi/src/common/ui/new_home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Onboardingpage extends StatefulWidget {
@@ -51,84 +52,95 @@ class _OnboardingpageState extends State<Onboardingpage> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    return Scaffold(
-      backgroundColor: kPrimaryColor,
-      body: SafeArea(
-        child: Stack(
-          alignment: AlignmentDirectional.bottomCenter,
-          children: [
-            PageView.builder(
-              physics: ClampingScrollPhysics(),
-              itemCount: _introList.length,
-              onPageChanged: (int page) {
-                getChangedPageAndMoveBar(page);
-              },
-              controller: controller,
-              itemBuilder: (context, index) {
-                return _introList[index];
-              },
-            ),
-            Container(
-              width: SizeConfig.screenWidth,
-              height: 35.0,
-              child: Stack(
-                children: [
-                  Center(
-                    child: Container(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          for (int i = 0; i < _introList.length; i++)
-                            if (i == currentPageValue) ...[circleBar(true)] else
-                              circleBar(false),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 0.0,
-                    right: 0.0,
-                    bottom: 0.0,
-                    child: Visibility(
-                      visible: currentPageValue == _introList.length - 1
-                          ? true
-                          : false,
-                      child: TextButton(
-                        onPressed: () => Navigator.pushAndRemoveUntil(
-                            context,
-                            SlideLeftRoute(
-                              page: NewHomePage(),
-                            ),
-                            (route) => false),
-                        style: TextButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                        child: InkWell(
-                          onTap: _mulai,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Mulai'),
-                              SizedBox(
-                                width: 4.0,
-                              ),
-                              Icon(
-                                Icons.chevron_right,
-                                size: 18.0,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: kPrimaryColor,
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+      child: Scaffold(
+        backgroundColor: kPrimaryColor,
+        body: SafeArea(
+          child: Stack(
+            alignment: AlignmentDirectional.bottomCenter,
+            children: [
+              PageView.builder(
+                physics: ClampingScrollPhysics(),
+                itemCount: _introList.length,
+                onPageChanged: (int page) {
+                  getChangedPageAndMoveBar(page);
+                },
+                controller: controller,
+                itemBuilder: (context, index) {
+                  return _introList[index];
+                },
               ),
-            ),
-          ],
+              Container(
+                width: SizeConfig.screenWidth,
+                height: 35.0,
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Container(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            for (int i = 0; i < _introList.length; i++)
+                              if (i == currentPageValue) ...[
+                                circleBar(true)
+                              ] else
+                                circleBar(false),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 0.0,
+                      right: 0.0,
+                      bottom: 0.0,
+                      child: Visibility(
+                        visible: currentPageValue == _introList.length - 1
+                            ? true
+                            : false,
+                        child: TextButton(
+                          onPressed: () => Navigator.pushAndRemoveUntil(
+                              context,
+                              SlideLeftRoute(
+                                page: NewHomePage(),
+                              ),
+                              (route) => false),
+                          style: TextButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          child: InkWell(
+                            onTap: _mulai,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('Mulai'),
+                                SizedBox(
+                                  width: 4.0,
+                                ),
+                                Icon(
+                                  Icons.chevron_right,
+                                  size: 18.0,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

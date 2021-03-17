@@ -67,6 +67,8 @@ class _SplashpageState extends State<Splashpage>
         statusBarColor: Colors.transparent,
         statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: kPrimaryColor,
+        systemNavigationBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
         backgroundColor: kPrimaryColor,

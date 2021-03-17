@@ -14,35 +14,43 @@ class ErrorTempatTidurWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          height: 200,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-                image: AssetImage('assets/images/server_error.png')),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 22.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/images/server_error.png')),
+            ),
           ),
-        ),
-        SizedBox(
-          height: 22.0,
-        ),
-        Text('$title',
+          SizedBox(
+            height: 22.0,
+          ),
+          Text('$title',
+              style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.grey,
+                  fontStyle: FontStyle.italic)),
+          SizedBox(
+            height: 18.0,
+          ),
+          Text(
+            '$message',
+            textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 18.0,
+                fontSize: 16.0,
                 color: Colors.grey,
-                fontStyle: FontStyle.italic)),
-        SizedBox(
-          height: 18.0,
-        ),
-        Text(
-          '$message',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              fontSize: 16.0, color: Colors.grey, fontStyle: FontStyle.italic),
-        ),
-        child,
-      ],
+                fontStyle: FontStyle.italic),
+          ),
+          SizedBox(
+            height: 22.0,
+          ),
+          child,
+        ],
+      ),
     );
   }
 }

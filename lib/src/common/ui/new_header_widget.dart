@@ -64,10 +64,12 @@ class _NewHeaderWidgetState extends State<NewHeaderWidget> {
   void showSheetBed() {
     showModalBottomSheet(
       context: context,
+      barrierColor: Colors.transparent,
       isScrollControlled: true,
       backgroundColor: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(18.0),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(18.0), topRight: Radius.circular(18.0)),
       ),
       builder: (context) {
         return StreamTempatTidur();
@@ -123,7 +125,10 @@ class _NewHeaderWidgetState extends State<NewHeaderWidget> {
                     Text(
                       "Tunjukkan Tiket Antrian",
                       style: TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 20.0),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0,
+                        color: Colors.white,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
@@ -386,13 +391,13 @@ class _StreamTempatTidurState extends State<StreamTempatTidur> {
               margin: EdgeInsets.only(top: 5.0),
               width: 40,
               decoration: BoxDecoration(
-                border: Border.all(width: 2, color: Colors.grey),
+                border: Border.all(width: 2, color: Colors.grey[350]),
                 borderRadius: BorderRadius.circular(12.0),
               ),
             ),
           ),
           SizedBox(
-            height: 15.0,
+            height: 12.0,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(
@@ -404,7 +409,7 @@ class _StreamTempatTidurState extends State<StreamTempatTidur> {
             ),
           ),
           SizedBox(
-            height: 8.0,
+            height: 4.0,
           ),
           Expanded(
             child: _buildTokenWidget(context),
@@ -428,15 +433,22 @@ class _StreamTempatTidurState extends State<StreamTempatTidur> {
               return ErrorTempatTidurWidget(
                 message: snapshot.data.message,
                 title: 'Terjadi kesalahan',
-                child: TextButton(
-                  onPressed: () {},
-                  style: TextButton.styleFrom(
-                    backgroundColor: kPrimaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
+                child: Container(
+                  width: 150.0,
+                  height: 45.0,
+                  child: TextButton(
+                    onPressed: () {
+                      _tokenBloc.getToken();
+                      setState(() {});
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: kPrimaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
                     ),
+                    child: Text('Coba lagi'),
                   ),
-                  child: Text('Coba lagi'),
                 ),
               );
             case Status.COMPLETED:
@@ -445,8 +457,12 @@ class _StreamTempatTidurState extends State<StreamTempatTidur> {
                   message: snapshot.data.message,
                   title: 'Terjadi kesalahan',
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _tokenBloc.getToken();
+                      setState(() {});
+                    },
                     style: TextButton.styleFrom(
+                      primary: Colors.white,
                       backgroundColor: kPrimaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
@@ -485,6 +501,10 @@ class _StreamTempatTidurWidgetState extends State<StreamTempatTidurWidget> {
   @override
   void initState() {
     super.initState();
+    _getTempatTidur();
+  }
+
+  void _getTempatTidur() {
     _tempatTidurBloc.tokenSink.add(widget.token);
     _tempatTidurBloc.getTt();
   }
@@ -505,7 +525,10 @@ class _StreamTempatTidurWidgetState extends State<StreamTempatTidurWidget> {
                 message: snapshot.data.message,
                 title: 'Terjadi kesalahan',
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _getTempatTidur();
+                    setState(() {});
+                  },
                   style: TextButton.styleFrom(
                     backgroundColor: kPrimaryColor,
                     shape: RoundedRectangleBorder(
@@ -518,10 +541,13 @@ class _StreamTempatTidurWidgetState extends State<StreamTempatTidurWidget> {
             case Status.COMPLETED:
               if (!snapshot.data.data.success) {
                 return ErrorTempatTidurWidget(
-                  message: snapshot.data.message,
-                  title: 'Terjadi kesalahan',
+                  message: snapshot.data.data.metadata.message,
+                  title: 'Perhatian',
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      _getTempatTidur();
+                      setState(() {});
+                    },
                     style: TextButton.styleFrom(
                       backgroundColor: kPrimaryColor,
                       shape: RoundedRectangleBorder(
@@ -576,11 +602,12 @@ class _ResultTempatTidurState extends State<ResultTempatTidur> {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12.0),
+            border: Border.all(color: kSecondaryColor),
             boxShadow: [
               BoxShadow(
-                color: Colors.black26,
+                color: Colors.black12,
                 blurRadius: 4.0,
-                offset: Offset(2.0, 2.0),
+                offset: Offset(2.0, 3.0),
               )
             ],
           ),
@@ -592,17 +619,23 @@ class _ResultTempatTidurState extends State<ResultTempatTidur> {
                   Icon(
                     Icons.hotel,
                     size: 22.0,
+                    color: kSecondaryColor,
                   ),
-                  Text(
-                    '${tempat.kamar}',
-                    style:
-                        TextStyle(fontSize: 15.0, fontWeight: FontWeight.w600),
+                  Flexible(
+                    child: Text(
+                      '${tempat.kamar}',
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                          fontSize: 13.0,
+                          fontWeight: FontWeight.w600,
+                          color: kSecondaryColor),
+                    ),
                   )
                 ],
               ),
               Expanded(
                 child: CircularPercentIndicator(
-                  radius: 115.0,
+                  radius: 100.0,
                   animation: true,
                   animationDuration: 1200,
                   lineWidth: 12.0,
@@ -632,7 +665,10 @@ class _ResultTempatTidurState extends State<ResultTempatTidur> {
                 children: [
                   Column(
                     children: [
-                      Text('Terisi'),
+                      Text(
+                        'Terisi',
+                        style: TextStyle(color: kSecondaryColor),
+                      ),
                       Text(
                         '${tempat.terisi}',
                         style: TextStyle(
@@ -644,11 +680,16 @@ class _ResultTempatTidurState extends State<ResultTempatTidur> {
                   ),
                   Column(
                     children: [
-                      Text('Total'),
+                      Text(
+                        'Total',
+                        style: TextStyle(color: kSecondaryColor),
+                      ),
                       Text(
                         '${tempat.total}',
                         style: TextStyle(
-                            fontSize: 18.0, fontWeight: FontWeight.w600),
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w600,
+                            color: kSecondaryColor),
                       ),
                     ],
                   )

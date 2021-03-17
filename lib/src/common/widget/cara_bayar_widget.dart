@@ -35,8 +35,18 @@ class _CaraBayarWidgetState extends State<CaraBayarWidget> {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Center(
+          child: Container(
+            width: 50,
+            margin: EdgeInsets.only(top: 6.0),
+            decoration: BoxDecoration(
+              border: Border.all(width: 2, color: Colors.grey[350]),
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+          ),
+        ),
         SizedBox(
-          height: 12.0,
+          height: 4.0,
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 8.0),
@@ -44,6 +54,9 @@ class _CaraBayarWidgetState extends State<CaraBayarWidget> {
             'Cara Bayar',
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w600),
           ),
+        ),
+        SizedBox(
+          height: 8.0,
         ),
         _buildStreamToken(context),
       ],
@@ -64,12 +77,17 @@ class _CaraBayarWidgetState extends State<CaraBayarWidget> {
               );
             case Status.COMPLETED:
               if (snapshot.data.data.metadata.code == 500) {
-                return Container();
+                return ErrorCaraBayarWidget(
+                  message: snapshot.data.data.metadata.message,
+                );
               }
-              return ListCaraBayar(
-                token: snapshot.data.data.response.token,
-                caraBayarSelected: (String id, String deskripsi) =>
-                    widget.caraBayarSelected(id, deskripsi),
+              return Container(
+                constraints: BoxConstraints(minHeight: 310),
+                child: ListCaraBayar(
+                  token: snapshot.data.data.response.token,
+                  caraBayarSelected: (String id, String deskripsi) =>
+                      widget.caraBayarSelected(id, deskripsi),
+                ),
               );
           }
         }
@@ -126,7 +144,24 @@ class _ListCaraBayarState extends State<ListCaraBayar> {
               return SkeletonCaraBayar();
             case Status.ERROR:
               return ErrorCaraBayarWidget(
+                image: 'assets/images/server_error.png',
                 message: snapshot.data.message,
+                button: Container(
+                  width: 120,
+                  height: 45.0,
+                  child: TextButton(
+                    onPressed: () {
+                      _caraBayarBloc.getCaraBayar();
+                      setState(() {});
+                    },
+                    style: TextButton.styleFrom(
+                        backgroundColor: kPrimaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        )),
+                    child: Text('Coba lagi'),
+                  ),
+                ),
               );
             case Status.COMPLETED:
               return ListView.separated(

@@ -42,11 +42,16 @@ class _NewBodyWidgetState extends State<NewBodyWidget> {
     _initTargets();
   }
 
-  void _pilihPoli(String id) {
+  void _pilihPoli(String id) async {
     setState(() {
       idPoli = id;
       initial = false;
     });
+    await _scrollController.scrollToIndex(
+      int.parse(id),
+      preferPosition: AutoScrollPosition.middle,
+      duration: Duration(seconds: 1),
+    );
   }
 
   void listPoli(List<Poliklinik> poli) {
@@ -145,7 +150,7 @@ class _NewBodyWidgetState extends State<NewBodyWidget> {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     return Container(
-      margin: EdgeInsets.only(top: widget.height - 115),
+      margin: EdgeInsets.only(top: widget.height - 85),
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
@@ -153,7 +158,7 @@ class _NewBodyWidgetState extends State<NewBodyWidget> {
             onTap: _searchPoli,
             child: Container(
               key: searchKey,
-              height: 45.0,
+              height: 42.0,
               margin: EdgeInsets.symmetric(horizontal: 18.0),
               padding: EdgeInsets.symmetric(horizontal: 18.0),
               decoration: BoxDecoration(
@@ -198,12 +203,30 @@ class _NewBodyWidgetState extends State<NewBodyWidget> {
               return ErrorPoliWidget(
                 linkImage: 'assets/images/server_error.png',
                 message: '${snapshot.data.message}',
+                button: Container(
+                  width: 120,
+                  height: 45,
+                  child: TextButton(
+                    onPressed: () {
+                      _tokenBloc.getToken();
+                      setState(() {});
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: kPrimaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: Text('Coba lagi'),
+                  ),
+                ),
               );
             case Status.COMPLETED:
               if (snapshot.data.data.metadata.code == 500) {
                 return ErrorPoliWidget(
                   linkImage: 'assets/images/no_data.png',
                   message: '${snapshot.data.message}',
+                  button: Container(),
                 );
               }
               return StreamPoliWidget(

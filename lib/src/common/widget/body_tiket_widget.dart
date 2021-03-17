@@ -164,7 +164,8 @@ class _TiketBodyWidgetState extends State<TiketBodyWidget>
           )
         : errorTiket
             ? Padding(
-                padding: const EdgeInsets.symmetric(vertical: 28.0),
+                padding: const EdgeInsets.symmetric(
+                    vertical: 12.0, horizontal: 32.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -186,6 +187,9 @@ class _TiketBodyWidgetState extends State<TiketBodyWidget>
                           fontSize: 17.0,
                           color: Colors.grey,
                           fontStyle: FontStyle.italic),
+                    ),
+                    SizedBox(
+                      height: 32.0,
                     )
                   ],
                 ),

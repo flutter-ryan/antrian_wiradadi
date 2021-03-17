@@ -27,7 +27,7 @@ class DioBaseHelper {
       } else if (e.type == DioErrorType.RECEIVE_TIMEOUT) {
         throw BadRequestException("Server unreachable");
       } else if (e.type == DioErrorType.RESPONSE) {
-        print(e.response.statusCode);
+        _returnResponse(e.response);
       }
 
       throw ErrorNoCodeException("Server unreachable");
@@ -43,6 +43,7 @@ class DioBaseHelper {
       if (type) {
         dio.options.headers['x-token'] = token;
       }
+      dio.options.headers['Content-Type'] = 'application/json';
       final response = await dio.post('$url', data: request);
       responseJson = response.data;
     } on DioError catch (e) {

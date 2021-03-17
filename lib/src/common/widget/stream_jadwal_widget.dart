@@ -1,8 +1,10 @@
 import 'package:antrian_wiradadi/src/bloc/jadwal_dokter_bloc.dart';
+import 'package:antrian_wiradadi/src/common/source/color_style.dart';
 import 'package:antrian_wiradadi/src/common/source/slide_left_route.dart';
 import 'package:antrian_wiradadi/src/common/ui/new_daftar_pasien.dart';
 import 'package:antrian_wiradadi/src/common/widget/dialog_date_picker.dart';
 import 'package:antrian_wiradadi/src/common/widget/dialog_welcome_widget.dart';
+import 'package:antrian_wiradadi/src/common/widget/error_jadwal_widget.dart';
 import 'package:antrian_wiradadi/src/common/widget/skeleton_jadwal_widget.dart';
 import 'package:antrian_wiradadi/src/model/jadwal_dokter_model.dart';
 import 'package:antrian_wiradadi/src/repository/responseApi/api_response.dart';
@@ -28,7 +30,7 @@ class StreamJadwalWidget extends StatefulWidget {
 
 class _StreamJadwalWidgetState extends State<StreamJadwalWidget> {
   JadwalDokterBloc _jadwalDokterBloc = JadwalDokterBloc();
-  GlobalKey jadwalKey = GlobalKey();
+  final GlobalKey jadwalKey = GlobalKey();
 
   @override
   void initState() {
@@ -49,13 +51,13 @@ class _StreamJadwalWidgetState extends State<StreamJadwalWidget> {
   }
 
   void _pickDate(String idJadwal, String weekday) {
-    Future.delayed(Duration(milliseconds: 500), () async {
+    Future.delayed(Duration(milliseconds: 300), () async {
       final _selected = await showGeneralDialog(
         context: context,
         transitionBuilder: (context, a1, a2, child) {
           final curvedValue = Curves.easeInOutBack.transform(a1.value) - 1.0;
           return Transform(
-            transform: Matrix4.translationValues(0.0, curvedValue * 200, 0.0),
+            transform: Matrix4.translationValues(0.0, curvedValue * -200, 0.0),
             child: Opacity(
               opacity: a1.value,
               child: DialogDatePicker(
@@ -73,7 +75,9 @@ class _StreamJadwalWidgetState extends State<StreamJadwalWidget> {
           showModalBottomSheet(
             context: context,
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(22.0)),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(18.0),
+                    topRight: Radius.circular(18.0))),
             builder: (context) {
               return SheetJenisPendaftaran(
                 pendaftaran: (int idJenis) =>
@@ -163,34 +167,33 @@ class _StreamJadwalWidgetState extends State<StreamJadwalWidget> {
             case Status.LOADING:
               return SkeletonJadwalWidget();
             case Status.ERROR:
-              return Container(
-                child: Text('${snapshot.data.message}'),
+              return ErrorJadwalWidget(
+                image: 'assets/images/server_error.png',
+                message: snapshot.data.message,
+                button: Container(
+                  width: 120,
+                  height: 45,
+                  child: TextButton(
+                    onPressed: () {
+                      _jadwalDokterBloc.getJadwal();
+                      setState(() {});
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: kPrimaryColor,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                    child: Text('Coba lagi'),
+                  ),
+                ),
               );
             case Status.COMPLETED:
               if (!snapshot.data.data.success) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      height: 160.0,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/no_data.png'),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 22.0,
-                    ),
-                    Text(
-                      '${snapshot.data.data.detail}',
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 16.0,
-                        fontStyle: FontStyle.italic,
-                      ),
-                    ),
-                  ],
+                return ErrorJadwalWidget(
+                  image: 'assets/images/no_data.png',
+                  message: snapshot.data.data.detail,
+                  button: Container(),
                 );
               }
               return ResultJadwalDokter(
@@ -411,14 +414,15 @@ class _ResultJadwalDokterState extends State<ResultJadwalDokter> {
                         mainAxisSpacing: 5,
                         childAspectRatio: 2 / 1,
                       ),
-                      itemBuilder: (context, i) {
-                        var data = jadwal.jadwal[i];
+                      itemBuilder: (context, position) {
+                        var data = jadwal.jadwal[position];
                         var mulai = DateTime.parse('2021-01-01 ${data.mulai}');
                         var selesai =
                             DateTime.parse('2021-01-01 ${data.selesai}');
                         DateFormat _format = DateFormat('HH:mm');
                         return Container(
-                          key: i == 0 ? widget.jadwalKey : null,
+                          key:
+                              i == 0 && position == 0 ? widget.jadwalKey : null,
                           decoration: BoxDecoration(
                             color: Colors.green,
                             borderRadius: BorderRadius.circular(12.0),
@@ -480,8 +484,20 @@ class SheetJenisPendaftaran extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
+        SizedBox(
+          height: 8.0,
+        ),
+        Center(
+          child: Container(
+            width: 50,
+            decoration: BoxDecoration(
+              border: Border.all(width: 2.0, color: Colors.grey[350]),
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+          ),
+        ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 22.0),
+          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 12.0),
           child: Text(
             'Jenis Pendaftaran',
             style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
@@ -504,8 +520,14 @@ class SheetJenisPendaftaran extends StatelessWidget {
               },
               contentPadding: EdgeInsets.symmetric(horizontal: 32.0),
               leading: data.id == 1
-                  ? Icon(Icons.person_search_sharp)
-                  : Icon(Icons.person_add),
+                  ? Icon(
+                      Icons.person_search_sharp,
+                      color: kSecondaryColor,
+                    )
+                  : Icon(
+                      Icons.person_add,
+                      color: kSecondaryColor,
+                    ),
               title: Text('${data.deskripsi}'),
             );
           },

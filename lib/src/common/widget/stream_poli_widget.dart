@@ -103,12 +103,30 @@ class _StreamPoliWidgetState extends State<StreamPoliWidget> {
                 return ErrorPoliWidget(
                   linkImage: 'assets/images/server_error.png',
                   message: '${snapshot.data.message}',
+                  button: Container(
+                    width: 120,
+                    height: 45,
+                    child: TextButton(
+                      onPressed: () {
+                        _poliklinikBloc.getPoli();
+                        setState(() {});
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: kPrimaryColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                      ),
+                      child: Text('Coba Lagi'),
+                    ),
+                  ),
                 );
               case Status.COMPLETED:
                 if (!snapshot.data.data.success) {
                   return ErrorPoliWidget(
                     linkImage: 'assets/images/no_data.png',
                     message: 'Data poliklinik tidak tersedia saat ini',
+                    button: Container(),
                   );
                 }
 
@@ -189,13 +207,15 @@ class _ListPoliWidgetState extends State<ListPoliWidget> {
                 controller: widget.scrollController,
                 index: int.parse(poli.id),
                 child: Container(
-                  key: i == 0 ? widget.poliKey : null,
+                  key: widget.idPoli == poli.id || widget.initial && i == 0
+                      ? widget.poliKey
+                      : null,
                   width: 140.0,
                   decoration: BoxDecoration(
                     color: widget.initial && i == 0
-                        ? Colors.orange
+                        ? Colors.green
                         : widget.idPoli == poli.id
-                            ? Colors.orange
+                            ? Colors.green
                             : kSecondaryColor,
                     borderRadius: BorderRadius.circular(20.0),
                     boxShadow: [
@@ -232,7 +252,10 @@ class _ListPoliWidgetState extends State<ListPoliWidget> {
                                     )
                                   ],
                                 ),
-                                child: Icon(Icons.paste),
+                                child: Icon(
+                                  Icons.paste,
+                                  color: kSecondaryColor,
+                                ),
                               ),
                               Align(
                                 alignment: Alignment.centerRight,

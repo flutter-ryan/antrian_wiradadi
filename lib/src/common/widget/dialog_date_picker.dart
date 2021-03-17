@@ -30,7 +30,7 @@ class _DialogDatePickerState extends State<DialogDatePicker> {
     super.initState();
     _selectedDate = DateTime.now();
     _firstDate = DateTime.now().subtract(Duration(days: 1));
-    _lastDate = DateTime.now().add(Duration(days: 12));
+    _lastDate = DateTime.now().add(Duration(days: 14));
     _format = DateFormat('yyyy-MM-dd');
   }
 
@@ -42,12 +42,7 @@ class _DialogDatePickerState extends State<DialogDatePicker> {
   }
 
   bool _dateActiveDesire(DateTime day, String weekday) {
-    DateFormat _format = DateFormat('yyyy-MM-dd', 'id');
-    String selectedDay = _format.format(day);
-    String now = _format.format(DateTime.now());
-    if ((day.weekday == int.parse(weekday) + 1 &&
-            day.isAfter(DateTime.now())) ||
-        selectedDay == now) {
+    if ((day.weekday == int.parse(weekday) + 1)) {
       return true;
     }
     return false;
@@ -63,10 +58,9 @@ class _DialogDatePickerState extends State<DialogDatePicker> {
   @override
   Widget build(BuildContext context) {
     dp.DatePickerStyles styles = dp.DatePickerRangeStyles(
-      dayHeaderStyle: dp.DayHeaderStyle(
-          textStyle: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w600)),
       currentDateStyle: TextStyle(
-          color: Colors.blue, fontWeight: FontWeight.w700, fontSize: 18.0),
+          color: Colors.blue, fontWeight: FontWeight.w700, fontSize: 20.0),
+      disabledDateStyle: TextStyle(color: Colors.grey[350]),
       defaultDateTextStyle: TextStyle(
           color: Colors.blueGrey, fontWeight: FontWeight.w700, fontSize: 18.0),
       selectedDateStyle: Theme.of(context).accentTextTheme.bodyText1.copyWith(
@@ -159,13 +153,6 @@ class _DialogDatePickerState extends State<DialogDatePicker> {
                         selectableDayPredicate: (DateTime day) =>
                             _dateActiveDesire(day, widget.weekday),
                         datePickerStyles: styles,
-                        datePickerLayoutSettings: dp.DatePickerLayoutSettings(
-                          contentPadding: EdgeInsets.symmetric(
-                            horizontal: 0.0,
-                            vertical: 0.0,
-                          ),
-                          scrollPhysics: NeverScrollableScrollPhysics(),
-                        ),
                       ),
                     ),
                   ),

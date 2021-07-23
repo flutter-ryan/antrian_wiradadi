@@ -9,7 +9,7 @@ class TokenRepo {
         'getToken',
         jsonEncode({
           "username": "8888",
-          "password": "CIYES724FK",
+          "password": "6RIVNP8U5A",
         }),
         false,
         token);

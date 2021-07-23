@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -28,8 +28,6 @@ dependencies:
   cupertino_icons: ^1.0.0
   dio: ^3.0.9
   flutter_date_pickers: ^0.1.10
-  flutter_launcher_icons: ^0.9.0
-  http: ^0.12.0
   intl: ^0.17.0
   package_info: ^0.4.3+4
   percent_indicator: ^2.1.9+1
@@ -37,7 +35,7 @@ dependencies:
   rxdart: ^0.25.0
   scroll_to_index: ^1.0.6
   search_page: ^1.4.0
-  shared_preferences: ^0.5.12+4
+  shared_preferences: ^2.0.5
   shimmer: ^1.1.2
   toast: ^0.1.5
   tutorial_coach_mark: ^0.6.0+1
@@ -45,12 +43,12 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -96,4 +94,5 @@ flutter:
 flutter_icons:
   android: "ic_launcher"
   ios: true
+  remove_alpha_ios: true
   image_path: assets/images/launcher.png

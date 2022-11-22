@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>77392700478-9gc68emoiveterto748sgn1d9sktnju0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.77392700478-9gc68emoiveterto748sgn1d9sktnju0</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCWgJ1_bOKVfY8CfK0Pb_JImPl6dyFoHCU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>77392700478</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>co.id.rsuwiradadihusada.antrianWiradadi</string>
+	<key>PROJECT_ID</key>
+	<string>antrian-poli-6adc1</string>
+	<key>STORAGE_BUCKET</key>
+	<string>antrian-poli-6adc1.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:77392700478:ios:ef2d31c61b4c804e59dd6f</string>
+</dict>
+</plist>

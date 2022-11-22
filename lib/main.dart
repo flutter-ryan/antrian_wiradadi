@@ -1,41 +1,42 @@
-import 'package:antrian_wiradadi/src/common/source/color_style.dart';
 import 'package:antrian_wiradadi/src/common/ui/splash_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
-    runApp(MyApp());
+    runApp(const MyApp());
   });
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'RSU Wiradadi Husada',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Rubik',
-        primaryColor: Colors.blue,
-        focusColor: Colors.blue,
-        accentColor: kSecondaryColor,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+        textTheme: GoogleFonts.latoTextTheme(
+          Theme.of(context).textTheme,
+        ),
+        primarySwatch: Colors.blue,
       ),
-      localizationsDelegates: [
+      localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
         DefaultCupertinoLocalizations.delegate
       ],
-      supportedLocales: [
-        const Locale('id'),
+      supportedLocales: const [
+        Locale('id'),
       ],
-      home: Splashpage(),
+      home: const Splashpage(),
     );
   }
 }

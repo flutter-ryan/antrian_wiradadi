@@ -1,31 +1,28 @@
 import 'dart:async';
 
 mixin InputValidation {
-  final namaValidate = StreamTransformer<String, String>.fromHandlers(
-    handleData: (nama, sink) {
-      (nama.isNotEmpty) ? sink.add(nama) : sink.addError('Field is required');
-    },
-  );
-
-  final tanggalLahirValidate = StreamTransformer<String, String>.fromHandlers(
-      handleData: (tanggalLahir, sink) {
-    (tanggalLahir.isNotEmpty)
-        ? sink.add(tanggalLahir)
-        : sink.addError('Field is required');
+  final emptyValidate =
+      StreamTransformer<String, String>.fromHandlers(handleData: (empty, sink) {
+    empty.isNotEmpty ? sink.add(empty) : sink.addError("Field is required");
   });
-  final kontakValidate = StreamTransformer<String, String>.fromHandlers(
-      handleData: (kontak, sink) {
-    (kontak.isNotEmpty) ? sink.add(kontak) : sink.addError('Field is required');
+  final karakterValidate = StreamTransformer<String, String>.fromHandlers(
+      handleData: (karakter, sink) {
+    karakter.trim().length == 16
+        ? sink.add(karakter)
+        : sink.addError('Input 16 karakter');
   });
-  final caraBayarValidate = StreamTransformer<String, String>.fromHandlers(
-      handleData: (caraBayar, sink) {
-    (caraBayar.isNotEmpty)
-        ? sink.add(caraBayar)
-        : sink.addError('Field is required');
+  final karakterBpjsValidate = StreamTransformer<String, String>.fromHandlers(
+      handleData: (karakter, sink) {
+    karakter.trim().length == 13
+        ? sink.add(karakter)
+        : sink.addError('Input 13 karakter');
   });
 
-  final noRmValidate =
-      StreamTransformer<String, String>.fromHandlers(handleData: (norm, sink) {
-    (norm.isNotEmpty) ? sink.add(norm) : sink.addError('Field is required');
+  final karakterNoRujukanValidate =
+      StreamTransformer<String, String>.fromHandlers(
+          handleData: (karakter, sink) {
+    karakter.trim().length == 19
+        ? sink.add(karakter)
+        : sink.addError('Input 19 karakter');
   });
 }

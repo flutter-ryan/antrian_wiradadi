@@ -1,36 +1,40 @@
 import 'dart:async';
 
-import 'package:antrian_wiradadi/src/model/poliklinik_model.dart';
-import 'package:antrian_wiradadi/src/repository/poliklinik_repo.dart';
-import 'package:antrian_wiradadi/src/repository/responseApi/api_response.dart';
+import 'package:antrian_wiradadi/src/models/poliklinik_model.dart';
+import 'package:antrian_wiradadi/src/repositories/poliklinik_repo.dart';
+import 'package:antrian_wiradadi/src/repositories/responseApi/api_response.dart';
 import 'package:rxdart/rxdart.dart';
 
 class PoliklinikBloc {
-  PoliklinikRepo _repo = PoliklinikRepo();
-  StreamController _streamPoli;
+  final PoliklinikRepo _repo = PoliklinikRepo();
+  StreamController<ApiResponse<PoliklinikModel>>? _streamPoli;
 
-  BehaviorSubject<String> _tokenCon = BehaviorSubject<String>();
+  final BehaviorSubject<String> _tokenCon = BehaviorSubject();
+  final BehaviorSubject<String> _posCon = BehaviorSubject();
+
   StreamSink<String> get tokenSink => _tokenCon.sink;
-  StreamSink<ApiResponse<PoliklinikModel>> get poliSink => _streamPoli.sink;
-  Stream<ApiResponse<PoliklinikModel>> get poliStream => _streamPoli.stream;
+  StreamSink<String> get posSink => _posCon.sink;
+  StreamSink<ApiResponse<PoliklinikModel>> get poliSink => _streamPoli!.sink;
+  Stream<ApiResponse<PoliklinikModel>> get poliStream => _streamPoli!.stream;
 
   getPoli() {
-    _streamPoli = StreamController<ApiResponse<PoliklinikModel>>();
+    _streamPoli = StreamController();
     final token = _tokenCon.value;
-    fetchPoli(token);
+    final pos = _posCon.value;
+    fetchPoli(token, pos);
   }
 
-  fetchPoli(String token) async {
+  fetchPoli(String token, String pos) async {
     poliSink.add(ApiResponse.loading('Memuat...'));
     try {
-      PoliklinikModel poliModel = await _repo.poli(token);
+      PoliklinikModel poliModel = await _repo.getPoliklinik(token, pos);
       Future.delayed(
-        Duration(seconds: 1),
+        const Duration(milliseconds: 500),
         () => poliSink.add(ApiResponse.completed(poliModel)),
       );
     } catch (e) {
       Future.delayed(
-        Duration(milliseconds: 1000),
+        const Duration(milliseconds: 500),
         () => poliSink.add(
           ApiResponse.error(e.toString()),
         ),
@@ -39,7 +43,8 @@ class PoliklinikBloc {
   }
 
   dispose() {
-    _tokenCon?.close();
+    _tokenCon.close();
+    _posCon.close();
     _streamPoli?.close();
   }
 }

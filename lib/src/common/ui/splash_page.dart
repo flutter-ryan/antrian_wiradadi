@@ -1,123 +1,128 @@
-import 'package:antrian_wiradadi/src/common/source/color_style.dart';
-import 'package:antrian_wiradadi/src/common/ui/new_home_page.dart';
-import 'package:antrian_wiradadi/src/common/ui/onboarding_page.dart';
+import 'package:antrian_wiradadi/src/common/source/size_config.dart';
+import 'package:antrian_wiradadi/src/common/source/slide_left_route.dart';
+import 'package:antrian_wiradadi/src/common/source/universal_config.dart';
+import 'package:antrian_wiradadi/src/common/ui/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:package_info/package_info.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class Splashpage extends StatefulWidget {
+  const Splashpage({Key? key}) : super(key: key);
+
   @override
   _SplashpageState createState() => _SplashpageState();
 }
 
-class _SplashpageState extends State<Splashpage>
-    with SingleTickerProviderStateMixin {
-  AnimationController animationController;
-  String version;
+class _SplashpageState extends State<Splashpage> {
+  String version = '1.0.0';
   @override
   void initState() {
     super.initState();
-    durationSplash();
-    animationController =
-        AnimationController(duration: new Duration(seconds: 2), vsync: this);
-    animationController.repeat();
+    getVersion();
   }
 
-  void durationSplash() async {
-    PackageInfo info = await PackageInfo.fromPlatform();
+  Future<void> getVersion() async {
+    PackageInfo _packageInfo = await PackageInfo.fromPlatform();
     setState(() {
-      version = info.version;
+      version = _packageInfo.version;
     });
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    String onboarding = _prefs.get('onboarding');
-    if (onboarding != null) {
-      Future.delayed(
-        Duration(seconds: 3),
-        () => Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NewHomePage(),
-            ),
-            (route) => false),
-      );
-    } else {
-      Future.delayed(
-        Duration(seconds: 3),
-        () => Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => Onboardingpage(),
-            ),
-            (route) => false),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    animationController.dispose();
-    super.dispose();
+    Future.delayed(
+      const Duration(milliseconds: 3000),
+      () => Navigator.pushAndRemoveUntil(
+          context,
+          SlideLeftRoute(
+            page: const Homepage(),
+          ),
+          (route) => false),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig().init(context);
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
+      value: const SystemUiOverlayStyle(
         statusBarBrightness: Brightness.light,
         statusBarIconBrightness: Brightness.dark,
+        statusBarColor: Colors.transparent,
         systemNavigationBarColor: kPrimaryColor,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
       child: Scaffold(
         backgroundColor: kPrimaryColor,
-        body: Stack(
-          children: [
-            Center(
-              child: Hero(
-                tag: 'logoHero',
-                child: Container(
-                  width: 180.0,
-                  height: 180.0,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                        'assets/images/logo.png',
+        body: SafeArea(
+          child: SizedBox(
+            width: SizeConfig.screenWidth,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(),
+                Wrap(
+                  direction: Axis.vertical,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  spacing: 18.0,
+                  children: [
+                    Container(
+                      height: 160,
+                      width: 160,
+                      padding: const EdgeInsets.all(8.0),
+                      decoration: BoxDecoration(
+                        color: kBackgroundLogo,
+                        borderRadius: BorderRadius.circular(12.0),
+                      ),
+                      child: Image.asset('images/logo.png'),
+                    ),
+                    const Text(
+                      namaRs,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.w600,
+                        color: kTextColor,
+                      ),
+                      textAlign: TextAlign.center,
+                    )
+                  ],
+                ),
+                Wrap(
+                  direction: Axis.vertical,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    const CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      radius: 18.0,
+                      child: CircularProgressIndicator(
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(kSecondaryColor),
                       ),
                     ),
-                  ),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 22.0,
-              right: 0.0,
-              left: 0.0,
-              child: Column(
-                children: [
-                  Center(
-                    child: CircularProgressIndicator(
-                      valueColor: animationController.drive(ColorTween(
-                          begin: kPrimaryColor, end: kSecondaryColor)),
+                    const SizedBox(
+                      height: 8.0,
                     ),
-                  ),
-                  SizedBox(
-                    height: 72.0,
-                  ),
-                  Text(
-                    'From\nSimpel Development',
-                    style: TextStyle(color: Colors.grey, fontSize: 12.0),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
-                    'Version $version',
-                    style: TextStyle(color: Colors.grey, fontSize: 12.0),
-                  )
-                ],
-              ),
-            )
-          ],
+                    Text(
+                      'Memeriksa versi',
+                      style: TextStyle(
+                          color: kLightTextColor, fontStyle: FontStyle.italic),
+                    ),
+                    const SizedBox(
+                      height: 52.0,
+                    ),
+                    Text(
+                      'From',
+                      style: TextStyle(fontSize: 10.0, color: kLightTextColor),
+                    ),
+                    Text(
+                      'Simpel Development',
+                      style: TextStyle(fontSize: 12.0, color: kLightTextColor),
+                    ),
+                    Text(
+                      'V.$version',
+                      style: TextStyle(fontSize: 10.0, color: kLightTextColor),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

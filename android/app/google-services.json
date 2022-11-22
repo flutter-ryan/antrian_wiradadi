@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "77392700478",
+    "project_id": "antrian-poli-6adc1",
+    "storage_bucket": "antrian-poli-6adc1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77392700478:android:7c4f471bfc49ca3859dd6f",
+        "android_client_info": {
+          "package_name": "co.id.rsuwiradadihusada.antrian_wiradadi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "77392700478-1m2njs1cj3jhjd3ec0361qul4e0h9t6m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXXQfoX_XI6FKchBwDPRdEoKeYjHKpCAY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "77392700478-1m2njs1cj3jhjd3ec0361qul4e0h9t6m.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

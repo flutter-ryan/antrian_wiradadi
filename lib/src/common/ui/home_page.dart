@@ -24,7 +24,7 @@ class Homepage extends StatefulWidget {
   final bool tiket;
 
   @override
-  _HomepageState createState() => _HomepageState();
+  State<Homepage> createState() => _HomepageState();
 }
 
 class _HomepageState extends State<Homepage> {
@@ -53,11 +53,13 @@ class _HomepageState extends State<Homepage> {
       InAppUpdate.checkForUpdate().then((info) {
         if (info.updateAvailability == UpdateAvailability.updateAvailable) {
           InAppUpdate.startFlexibleUpdate().catchError(
-            (e) => print(e),
+            (e) {
+              //
+            },
           );
         }
       }).catchError((e) {
-        print(e.toString());
+        //
       });
     }
   }
@@ -208,7 +210,7 @@ class StreamPosAntrian extends StatefulWidget {
   final Function()? clearSearch;
 
   @override
-  _StreamPosAntrianState createState() => _StreamPosAntrianState();
+  State<StreamPosAntrian> createState() => _StreamPosAntrianState();
 }
 
 class _StreamPosAntrianState extends State<StreamPosAntrian> {
@@ -344,7 +346,7 @@ class ListPosAntrianWidget extends StatefulWidget {
   final Function()? clearSearch;
 
   @override
-  _ListPosAntrianWidgetState createState() => _ListPosAntrianWidgetState();
+  State<ListPosAntrianWidget> createState() => _ListPosAntrianWidgetState();
 }
 
 class _ListPosAntrianWidgetState extends State<ListPosAntrianWidget>

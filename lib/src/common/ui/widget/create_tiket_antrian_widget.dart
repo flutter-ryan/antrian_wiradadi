@@ -24,7 +24,7 @@ class CreateTiketAntrianWidget extends StatefulWidget {
   final String? jenis;
 
   @override
-  _CreateTiketAntrianWidgetState createState() =>
+  State<CreateTiketAntrianWidget> createState() =>
       _CreateTiketAntrianWidgetState();
 }
 
@@ -88,7 +88,7 @@ class StreamPendaftaranPasien extends StatefulWidget {
   final Antrian response;
 
   @override
-  _StreamPendaftaranPasienState createState() =>
+  State<StreamPendaftaranPasien> createState() =>
       _StreamPendaftaranPasienState();
 }
 
@@ -139,8 +139,8 @@ class _StreamPendaftaranPasienState extends State<StreamPendaftaranPasien> {
         _isSuccess = false;
       }
     });
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    _prefs.setBool("tiket", true);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool("tiket", true);
   }
 
   @override

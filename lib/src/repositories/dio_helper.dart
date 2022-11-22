@@ -6,7 +6,7 @@ import 'package:dio/dio.dart';
 
 class DioHelper {
   late Dio dio;
-  String url = 'http://103.255.241.218:89';
+  String url = 'http://103.164.115.10:89';
 
   DioHelper() {
     BaseOptions options = BaseOptions(

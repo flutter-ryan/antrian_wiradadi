@@ -12,7 +12,7 @@ class StreamFirebaseWidget extends StatefulWidget {
   final String idPoli;
 
   @override
-  _StreamFirebaseWidgetState createState() => _StreamFirebaseWidgetState();
+  State<StreamFirebaseWidget> createState() => _StreamFirebaseWidgetState();
 }
 
 class _StreamFirebaseWidgetState extends State<StreamFirebaseWidget> {

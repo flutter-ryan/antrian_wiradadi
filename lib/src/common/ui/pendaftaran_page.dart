@@ -27,7 +27,7 @@ class PendaftaranPage extends StatefulWidget {
   final PendaftaranPasienBloc pendaftaranPasienBloc;
 
   @override
-  _PendaftaranPageState createState() => _PendaftaranPageState();
+  State<PendaftaranPage> createState() => _PendaftaranPageState();
 }
 
 class _PendaftaranPageState extends State<PendaftaranPage>
@@ -63,9 +63,9 @@ class _PendaftaranPageState extends State<PendaftaranPage>
             () => _tabController.animateTo(0),
           );
         } else {
-          Pasien _pasien = value as Pasien;
+          Pasien pasien = value as Pasien;
           setState(() {
-            _dataPasien = _pasien;
+            _dataPasien = pasien;
           });
         }
         setState(() {

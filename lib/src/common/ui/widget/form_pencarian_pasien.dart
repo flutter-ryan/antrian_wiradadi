@@ -15,7 +15,7 @@ class FormPencarianPasien extends StatefulWidget {
   const FormPencarianPasien({Key? key}) : super(key: key);
 
   @override
-  _FormPencarianPasienState createState() => _FormPencarianPasienState();
+  State<FormPencarianPasien> createState() => _FormPencarianPasienState();
 }
 
 class _FormPencarianPasienState extends State<FormPencarianPasien> {
@@ -99,7 +99,7 @@ class PencarianPasienForm extends StatefulWidget {
   final CariPasienBloc cariPasienBloc;
 
   @override
-  _PencarianPasienFormState createState() => _PencarianPasienFormState();
+  State<PencarianPasienForm> createState() => _PencarianPasienFormState();
 }
 
 class _PencarianPasienFormState extends State<PencarianPasienForm> {
@@ -224,7 +224,7 @@ class ResultPencarianPasien extends StatefulWidget {
   final Function()? retry;
 
   @override
-  _ResultPencarianPasienState createState() => _ResultPencarianPasienState();
+  State<ResultPencarianPasien> createState() => _ResultPencarianPasienState();
 }
 
 class _ResultPencarianPasienState extends State<ResultPencarianPasien> {

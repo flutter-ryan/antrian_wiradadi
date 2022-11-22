@@ -13,7 +13,7 @@ class TempatTidurViewWidget extends StatefulWidget {
   const TempatTidurViewWidget({Key? key}) : super(key: key);
 
   @override
-  _TempatTidurViewWidgetState createState() => _TempatTidurViewWidgetState();
+  State<TempatTidurViewWidget> createState() => _TempatTidurViewWidgetState();
 }
 
 class _TempatTidurViewWidgetState extends State<TempatTidurViewWidget> {
@@ -105,7 +105,7 @@ class ListTempatTidur extends StatefulWidget {
   }) : super(key: key);
   final String? token;
   @override
-  _ListTempatTidurState createState() => _ListTempatTidurState();
+  State<ListTempatTidur> createState() => _ListTempatTidurState();
 }
 
 class _ListTempatTidurState extends State<ListTempatTidur> {

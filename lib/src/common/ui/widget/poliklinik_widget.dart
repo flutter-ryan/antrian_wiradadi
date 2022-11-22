@@ -34,7 +34,7 @@ class PoliklinikWidget extends StatefulWidget {
   final String? filter;
 
   @override
-  _PoliklinikWidgetState createState() => _PoliklinikWidgetState();
+  State<PoliklinikWidget> createState() => _PoliklinikWidgetState();
 }
 
 class _PoliklinikWidgetState extends State<PoliklinikWidget> {
@@ -71,7 +71,7 @@ class _PoliklinikWidgetState extends State<PoliklinikWidget> {
 
   @override
   Widget build(BuildContext context) {
-    double _containerHeight = 75.0;
+    double containerHeight = 75.0;
     SizeConfig().init(context);
     return StreamBuilder<ApiResponse<TokenResponseModel>>(
       stream: _tokenBloc.tokenStream,
@@ -144,7 +144,7 @@ class _PoliklinikWidgetState extends State<PoliklinikWidget> {
                     left: 0,
                     right: 0,
                     child: AnimatedContainer(
-                      height: _show ? _containerHeight : 0.0,
+                      height: _show ? containerHeight : 0.0,
                       duration: const Duration(milliseconds: 200),
                       decoration:
                           const BoxDecoration(color: Colors.white, boxShadow: [
@@ -195,7 +195,7 @@ class StreamPoliklinik extends StatefulWidget {
   final ScrollController? scrollCon;
 
   @override
-  _StreamPoliklinikState createState() => _StreamPoliklinikState();
+  State<StreamPoliklinik> createState() => _StreamPoliklinikState();
 }
 
 class _StreamPoliklinikState extends State<StreamPoliklinik> {
@@ -282,7 +282,7 @@ class ListPoliWidget extends StatefulWidget {
   final ScrollController? scrollCon;
 
   @override
-  _ListPoliWidgetState createState() => _ListPoliWidgetState();
+  State<ListPoliWidget> createState() => _ListPoliWidgetState();
 }
 
 class _ListPoliWidgetState extends State<ListPoliWidget> {

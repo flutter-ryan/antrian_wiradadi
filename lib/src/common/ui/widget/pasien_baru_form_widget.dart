@@ -1,16 +1,20 @@
 import 'package:antrian_wiradadi/src/bloc/pendaftaran_pasien_bloc.dart';
+import 'package:antrian_wiradadi/src/bloc/rujukan_bloc.dart';
 import 'package:antrian_wiradadi/src/bloc/token_bloc.dart';
 import 'package:antrian_wiradadi/src/common/source/size_config.dart';
 import 'package:antrian_wiradadi/src/common/source/universal_config.dart';
 import 'package:antrian_wiradadi/src/common/ui/widget/create_tiket_antrian_widget.dart';
+import 'package:antrian_wiradadi/src/common/ui/widget/dialog_error_widget.dart';
 import 'package:antrian_wiradadi/src/common/ui/widget/input_text.dart';
 import 'package:antrian_wiradadi/src/common/ui/widget/input_text_date.dart';
 import 'package:antrian_wiradadi/src/common/ui/widget/input_text_select.dart';
 import 'package:antrian_wiradadi/src/common/ui/widget/stream_response.dart';
+import 'package:antrian_wiradadi/src/models/rujukan_model.dart';
 import 'package:antrian_wiradadi/src/models/token_model.dart';
 import 'package:antrian_wiradadi/src/repositories/responseApi/api_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class PasienBaruFormWidget extends StatefulWidget {
   const PasienBaruFormWidget({
@@ -29,7 +33,7 @@ class PasienBaruFormWidget extends StatefulWidget {
   final String? tanggal;
 
   @override
-  _PasienBaruFormWidgetState createState() => _PasienBaruFormWidgetState();
+  State<PasienBaruFormWidget> createState() => _PasienBaruFormWidgetState();
 }
 
 class _PasienBaruFormWidgetState extends State<PasienBaruFormWidget> {
@@ -93,6 +97,33 @@ class _PasienBaruFormWidgetState extends State<PasienBaruFormWidget> {
       curve: Curves.fastOutSlowIn,
       duration: const Duration(milliseconds: 500),
     );
+  }
+
+  void _showRujukan() {
+    if (_nomorKartuCon.text.isNotEmpty) {
+      _tokenBloc.getToken();
+      showAnimatedDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.0),
+            ),
+            child: _streamTokenRujukan(context),
+          );
+        },
+        duration: const Duration(milliseconds: 500),
+        animationType: DialogTransitionType.slideFromBottomFade,
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: 'Silahkan menginput Nomor BPJS Anda',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.black54,
+      );
+    }
   }
 
   @override
@@ -306,6 +337,15 @@ class _PasienBaruFormWidgetState extends State<PasienBaruFormWidget> {
                       keyAction: TextInputAction.next,
                       sink: widget.pendaftaranPasienBloc.noRefSink,
                       stream: widget.pendaftaranPasienBloc.noRefStream,
+                      isSuffix: true,
+                      suffixIcon: Material(
+                        color: Colors.transparent,
+                        child: IconButton(
+                          onPressed: _showRujukan,
+                          color: Colors.grey,
+                          icon: const Icon(Icons.search),
+                        ),
+                      ),
                     )
                   : const SizedBox(),
               // bottom space for stack button
@@ -363,6 +403,56 @@ class _PasienBaruFormWidgetState extends State<PasienBaruFormWidget> {
       },
     );
   }
+
+  Widget _streamTokenRujukan(BuildContext context) {
+    return StreamBuilder<ApiResponse<TokenResponseModel>>(
+      stream: _tokenBloc.tokenStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data!.status) {
+            case Status.loading:
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 22.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: SizeConfig.blockSizeVertical * 15,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('images/loading_transparent.gif'),
+                        ),
+                      ),
+                    ),
+                    Text(snapshot.data!.message)
+                  ],
+                ),
+              );
+            case Status.error:
+              return DialogErrorWidget(
+                imageSrc: 'images/server_error_1.png',
+                message: snapshot.data!.message,
+              );
+            case Status.completed:
+              if (snapshot.data!.data!.metadata!.code == 500) {
+                return DialogErrorWidget(
+                  imageSrc: 'images/server_error_1.png',
+                  message: snapshot.data!.data!.metadata!.message!,
+                );
+              }
+              return ListRujukan(
+                token: snapshot.data!.data!.response!.token!,
+                noBpjs: _nomorKartuCon.text,
+              );
+          }
+        }
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+        );
+      },
+    );
+  }
 }
 
 class StreamSubmit extends StatefulWidget {
@@ -378,7 +468,7 @@ class StreamSubmit extends StatefulWidget {
   final Function() createAntrian;
 
   @override
-  _StreamSubmitState createState() => _StreamSubmitState();
+  State<StreamSubmit> createState() => _StreamSubmitState();
 }
 
 class _StreamSubmitState extends State<StreamSubmit> {
@@ -404,6 +494,235 @@ class _StreamSubmitState extends State<StreamSubmit> {
           child: const Text('DAFTAR SEKARANG'),
         ),
       ),
+    );
+  }
+}
+
+class ListRujukan extends StatefulWidget {
+  const ListRujukan({
+    super.key,
+    required this.token,
+    required this.noBpjs,
+  });
+
+  final String token;
+  final String noBpjs;
+
+  @override
+  State<ListRujukan> createState() => _ListRujukanState();
+}
+
+class _ListRujukanState extends State<ListRujukan> {
+  final _rujukanBloc = RujukanBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    getRujukan();
+  }
+
+  void getRujukan() {
+    _rujukanBloc.tokenSink.add(widget.token);
+    _rujukanBloc.faskesSink.add(1);
+    _rujukanBloc.noKartuSink.add(widget.noBpjs);
+    _rujukanBloc.getRujukan();
+  }
+
+  @override
+  void dispose() {
+    _rujukanBloc.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<ApiResponse<RujukanModel>>(
+      stream: _rujukanBloc.rujukanStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data!.status) {
+            case Status.loading:
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 22.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: SizeConfig.blockSizeVertical * 15,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('images/loading_transparent.gif'),
+                        ),
+                      ),
+                    ),
+                    Text(snapshot.data!.message)
+                  ],
+                ),
+              );
+            case Status.error:
+              return DialogErrorWidget(
+                imageSrc: 'images/server_error_1.png',
+                message: snapshot.data!.message,
+                buttonRetry: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    minimumSize: const Size(150, 42),
+                  ),
+                  child: const Text('Tutup'),
+                ),
+              );
+            case Status.completed:
+              if (!snapshot.data!.data!.success!) {
+                return SecondStreamRujukan(
+                  token: widget.token,
+                  noKartu: widget.noBpjs,
+                );
+              }
+              return StreamResultRujukan(
+                data: snapshot.data!.data!.data!.rujukan,
+              );
+          }
+        }
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+        );
+      },
+    );
+  }
+}
+
+class SecondStreamRujukan extends StatefulWidget {
+  const SecondStreamRujukan({
+    super.key,
+    this.noKartu,
+    this.token,
+  });
+
+  final String? noKartu;
+  final String? token;
+
+  @override
+  State<SecondStreamRujukan> createState() => _SecondStreamRujukanState();
+}
+
+class _SecondStreamRujukanState extends State<SecondStreamRujukan> {
+  final _rujukanBloc = RujukanBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    _getRujukanSecondary();
+  }
+
+  void _getRujukanSecondary() {
+    _rujukanBloc.tokenSink.add(widget.token!);
+    _rujukanBloc.noKartuSink.add(widget.noKartu!);
+    _rujukanBloc.faskesSink.add(2);
+    _rujukanBloc.getRujukan();
+  }
+
+  @override
+  void dispose() {
+    _rujukanBloc.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<ApiResponse<RujukanModel>>(
+      stream: _rujukanBloc.rujukanStream,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          switch (snapshot.data!.status) {
+            case Status.loading:
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 22.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: SizeConfig.blockSizeVertical * 15,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('images/loading_transparent.gif'),
+                        ),
+                      ),
+                    ),
+                    Text(snapshot.data!.message)
+                  ],
+                ),
+              );
+            case Status.error:
+              return DialogErrorWidget(
+                imageSrc: 'images/server_error_1.png',
+                message: snapshot.data!.message,
+                buttonRetry: ElevatedButton(
+                  onPressed: () => Navigator.pop(context),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    minimumSize: const Size(150, 42),
+                  ),
+                  child: const Text('Tutup'),
+                ),
+              );
+            case Status.completed:
+              if (!snapshot.data!.data!.success!) {
+                return DialogErrorWidget(
+                  imageSrc: 'images/server_error_1.png',
+                  message: 'Data rujukan tidak tersedia',
+                  buttonRetry: ElevatedButton(
+                    onPressed: () => Navigator.pop(context),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      minimumSize: const Size(150, 42),
+                    ),
+                    child: const Text('Tutup'),
+                  ),
+                );
+              }
+              return StreamResultRujukan(
+                data: snapshot.data!.data!.data!.rujukan,
+              );
+          }
+        }
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+        );
+      },
+    );
+  }
+}
+
+class StreamResultRujukan extends StatefulWidget {
+  const StreamResultRujukan({
+    super.key,
+    this.data,
+  });
+
+  final List<Rujukan>? data;
+
+  @override
+  State<StreamResultRujukan> createState() => _StreamResultRujukanState();
+}
+
+class _StreamResultRujukanState extends State<StreamResultRujukan> {
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      itemBuilder: (context, i) {
+        var data = widget.data![i];
+        return ListTile(
+          title: Text('${data.noKunjungan}'),
+          subtitle: Text('${data.poliRujukan!.nama}'),
+        );
+      },
+      separatorBuilder: (context, i) => const SizedBox(
+        height: 18.0,
+      ),
+      itemCount: widget.data!.length,
     );
   }
 }

@@ -24,6 +24,8 @@ class InputText extends StatefulWidget {
     this.isNik = false,
     this.isBpjs = false,
     this.isRujukan = false,
+    this.isSuffix = false,
+    this.suffixIcon,
   }) : super(key: key);
 
   final String label;
@@ -42,9 +44,11 @@ class InputText extends StatefulWidget {
   final bool isNik;
   final bool isBpjs;
   final bool isRujukan;
+  final Widget? suffixIcon;
+  final bool isSuffix;
 
   @override
-  _InputTextState createState() => _InputTextState();
+  State<InputText> createState() => _InputTextState();
 }
 
 class _InputTextState extends State<InputText> {
@@ -197,7 +201,9 @@ class _InputTextState extends State<InputText> {
                             Icons.camera_alt_outlined,
                           ),
                         )
-                      : const SizedBox(),
+                      : widget.isSuffix
+                          ? widget.suffixIcon
+                          : const SizedBox(),
                 ),
                 onChanged: (value) => setState(() {
                   _charLength = value.length;

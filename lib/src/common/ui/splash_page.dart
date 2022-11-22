@@ -10,7 +10,7 @@ class Splashpage extends StatefulWidget {
   const Splashpage({Key? key}) : super(key: key);
 
   @override
-  _SplashpageState createState() => _SplashpageState();
+  State<Splashpage> createState() => _SplashpageState();
 }
 
 class _SplashpageState extends State<Splashpage> {
@@ -22,9 +22,9 @@ class _SplashpageState extends State<Splashpage> {
   }
 
   Future<void> getVersion() async {
-    PackageInfo _packageInfo = await PackageInfo.fromPlatform();
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
     setState(() {
-      version = _packageInfo.version;
+      version = packageInfo.version;
     });
     Future.delayed(
       const Duration(milliseconds: 3000),

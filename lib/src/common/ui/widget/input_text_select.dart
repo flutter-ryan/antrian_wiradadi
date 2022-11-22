@@ -50,7 +50,7 @@ class InputTextSelect extends StatefulWidget {
   final Function(String? poliBpjs)? getPoliBpjs;
 
   @override
-  _InputTextSelectState createState() => _InputTextSelectState();
+  State<InputTextSelect> createState() => _InputTextSelectState();
 }
 
 class _InputTextSelectState extends State<InputTextSelect> {
@@ -238,7 +238,7 @@ class StreamCaraBayar extends StatefulWidget {
   final Function(String id, String cara) caraBayar;
 
   @override
-  _StreamCaraBayarState createState() => _StreamCaraBayarState();
+  State<StreamCaraBayar> createState() => _StreamCaraBayarState();
 }
 
 class _StreamCaraBayarState extends State<StreamCaraBayar> {

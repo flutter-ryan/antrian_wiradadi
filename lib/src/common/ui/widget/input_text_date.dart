@@ -34,7 +34,7 @@ class InputTextDate extends StatefulWidget {
   final Function? getDate;
 
   @override
-  _InputTextDateState createState() => _InputTextDateState();
+  State<InputTextDate> createState() => _InputTextDateState();
 }
 
 class _InputTextDateState extends State<InputTextDate> {

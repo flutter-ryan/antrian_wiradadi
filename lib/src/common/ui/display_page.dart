@@ -9,7 +9,7 @@ class DisplayPage extends StatefulWidget {
   const DisplayPage({Key? key}) : super(key: key);
 
   @override
-  _DisplayPageState createState() => _DisplayPageState();
+  State<DisplayPage> createState() => _DisplayPageState();
 }
 
 class _DisplayPageState extends State<DisplayPage> {
@@ -177,7 +177,7 @@ class StreamDisplayAntrian extends StatefulWidget {
   final String token;
 
   @override
-  _StreamDisplayAntrianState createState() => _StreamDisplayAntrianState();
+  State<StreamDisplayAntrian> createState() => _StreamDisplayAntrianState();
 }
 
 class _StreamDisplayAntrianState extends State<StreamDisplayAntrian> {

@@ -11,7 +11,7 @@ class TicketViewWidget extends StatefulWidget {
   const TicketViewWidget({Key? key}) : super(key: key);
 
   @override
-  _TicketViewWidgetState createState() => _TicketViewWidgetState();
+  State<TicketViewWidget> createState() => _TicketViewWidgetState();
 }
 
 class _TicketViewWidgetState extends State<TicketViewWidget> {
@@ -80,7 +80,7 @@ class _TicketViewWidgetState extends State<TicketViewWidget> {
                         controller: _pageController,
                         itemCount: _tiket.length,
                         itemBuilder: (context, i) {
-                          AntrianSqlliteModel _ticket = _tiket[i];
+                          AntrianSqlliteModel ticket = _tiket[i];
 
                           return Padding(
                             padding:
@@ -131,14 +131,14 @@ class _TicketViewWidgetState extends State<TicketViewWidget> {
                                         ),
                                         RowTicketWidget(
                                           title: 'Tanggal daftar',
-                                          text: '${_ticket.tanggaldaftar}',
+                                          text: '${ticket.tanggaldaftar}',
                                         ),
                                         const SizedBox(
                                           height: 12.0,
                                         ),
                                         RowTicketWidget(
                                           title: 'Kode booking',
-                                          text: _ticket.kodebooking,
+                                          text: ticket.kodebooking,
                                         ),
                                         const SizedBox(
                                           height: 32.0,
@@ -154,35 +154,35 @@ class _TicketViewWidgetState extends State<TicketViewWidget> {
                                         ),
                                         RowTicketWidget(
                                           title: 'Nomor antrian',
-                                          text: '${_ticket.nomorantrean}',
+                                          text: '${ticket.nomorantrean}',
                                         ),
                                         const SizedBox(
                                           height: 22.0,
                                         ),
                                         RowTicketWidget(
                                           title: 'NIK',
-                                          text: '${_ticket.nik}',
+                                          text: '${ticket.nik}',
                                         ),
                                         const SizedBox(
                                           height: 22.0,
                                         ),
                                         RowTicketWidget(
                                           title: 'Nama pasien',
-                                          text: '${_ticket.nama}',
+                                          text: '${ticket.nama}',
                                         ),
                                         const SizedBox(
                                           height: 22.0,
                                         ),
                                         RowTicketWidget(
                                           title: 'Poli tujuan',
-                                          text: '${_ticket.namapoli}',
+                                          text: '${ticket.namapoli}',
                                         ),
                                         const SizedBox(
                                           height: 22.0,
                                         ),
                                         RowTicketWidget(
                                           title: 'Nama dokter',
-                                          text: '${_ticket.namadokter}',
+                                          text: '${ticket.namadokter}',
                                         ),
                                         const SizedBox(
                                           height: 22.0,
@@ -191,7 +191,7 @@ class _TicketViewWidgetState extends State<TicketViewWidget> {
                                           title: 'Tanggal kunjungan',
                                           text: _format.format(
                                             DateTime.parse(
-                                              _ticket.tanggalperiksa!,
+                                              ticket.tanggalperiksa!,
                                             ),
                                           ),
                                         ),
@@ -208,15 +208,15 @@ class _TicketViewWidgetState extends State<TicketViewWidget> {
                                           height: 18.0,
                                         ),
                                         Text(
-                                          '${_ticket.keterangan}',
+                                          '${ticket.keterangan}',
                                           textAlign: TextAlign.center,
                                         )
                                       ],
                                     ),
                                   ),
                                   StreamFirebaseTiketWidget(
-                                    idPoli: _ticket.kodepolirs,
-                                    namaPoli: _ticket.namapoli,
+                                    idPoli: ticket.kodepolirs,
+                                    namaPoli: ticket.namapoli,
                                   ),
                                 ],
                               ),
@@ -293,18 +293,12 @@ class StreamFirebaseTiketWidget extends StatefulWidget {
   final String? namaPoli;
 
   @override
-  _StreamFirebaseTiketWidgetState createState() =>
+  State<StreamFirebaseTiketWidget> createState() =>
       _StreamFirebaseTiketWidgetState();
 }
 
 class _StreamFirebaseTiketWidgetState extends State<StreamFirebaseTiketWidget> {
   final DateFormat _format = DateFormat('yyyy-MM-dd');
-
-  @override
-  void initState() {
-    print(widget.idPoli);
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

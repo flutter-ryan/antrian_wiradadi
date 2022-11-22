@@ -13,7 +13,7 @@ class FirestorePosAntrianWidget extends StatefulWidget {
   final String nomorPos;
 
   @override
-  _FirestorePosAntrianWidgetState createState() =>
+  State<FirestorePosAntrianWidget> createState() =>
       _FirestorePosAntrianWidgetState();
 }
 

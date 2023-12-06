@@ -76,9 +76,9 @@ class _DisplayPageState extends State<DisplayPage> {
                 future: _initFirebase,
                 builder: (context, snapshot) {
                   if (snapshot.hasError) {
-                    return Column(
+                    return const Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         StreamResponse(
                           image: 'images/server_error_1.png',
                           message: 'Memuat...',
@@ -96,9 +96,9 @@ class _DisplayPageState extends State<DisplayPage> {
                         if (snapshot.hasData) {
                           switch (snapshot.data!.status) {
                             case Status.loading:
-                              return Column(
+                              return const Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
+                                children: [
                                   StreamResponse(
                                     image: 'images/loading_transparent.gif',
                                     message: 'Memuat...',
@@ -146,9 +146,9 @@ class _DisplayPageState extends State<DisplayPage> {
                       },
                     );
                   }
-                  return Column(
+                  return const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       StreamResponse(
                         image: 'images/loading_transparent.gif',
                         message: 'Memuat...',

@@ -22,7 +22,7 @@ class DbHelper {
     String dbPath = join(directory.path, 'tiket_antrian');
 
     var database = openDatabase(dbPath,
-        version: 1, onCreate: _onCreate, onUpgrade: _onUpgrade);
+        version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
 
     return database;
   }
@@ -46,6 +46,7 @@ class DbHelper {
         jeniskunjungan INTEGER,
         nomorreferensi TEXT,
         nomorantrean TEXT,
+        nomorantreanpoli TEXT,
         estimasidilayani INTEGER,
         kodepolirs TEXT,
         keterangan TEXT,
@@ -55,7 +56,11 @@ class DbHelper {
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < newVersion) {}
+    if (oldVersion < newVersion) {
+      await db.execute(
+          '''ALTER TABLE tb_tiket_antrian ADD COLUMN nomorantreanpoli TEXT NULL DEFAULT NULL''');
+      print('Table Upgrade');
+    }
   }
 
   Future<Database> get db async {
@@ -78,6 +83,16 @@ class DbHelper {
     }
 
     return [];
+  }
+
+  Future<bool> selectRow(String kode) async {
+    var client = await db;
+    var res = await client
+        .query('tb_tiket_antrian', where: 'kodeBooking = ?', whereArgs: [kode]);
+    if (res.isEmpty) {
+      return false;
+    }
+    return true;
   }
 
   Future<int?> tiketRowCount() async {
@@ -127,6 +142,7 @@ class AntrianSqlliteModel {
   int? jeniskunjungan;
   String? nomorreferensi;
   String? nomorantrean;
+  String? nomorantreanpoli;
   String? angkaantrean;
   int? estimasidilayani;
   String? kodepolirs;
@@ -151,6 +167,7 @@ class AntrianSqlliteModel {
     this.jeniskunjungan,
     this.nomorreferensi,
     this.nomorantrean,
+    this.nomorantreanpoli,
     this.angkaantrean,
     this.estimasidilayani,
     this.kodepolirs,
@@ -176,6 +193,7 @@ class AntrianSqlliteModel {
         jeniskunjungan = map['jeniskunjungan'],
         nomorreferensi = map['nomorreferensi'],
         nomorantrean = map['nomorantrean'],
+        nomorantreanpoli = map['nomorantreanpoli'],
         estimasidilayani = map['estimasidilayani'],
         kodepolirs = map['kodepolirs'],
         keterangan = map['keterangan'],
@@ -199,6 +217,7 @@ class AntrianSqlliteModel {
     map['jeniskunjungan'] = jeniskunjungan;
     map['nomorreferensi'] = nomorreferensi;
     map['nomorantrean'] = nomorantrean;
+    map['nomorantreanpoli'] = nomorantreanpoli;
     map['estimasidilayani'] = estimasidilayani;
     map['keterangan'] = keterangan;
     map['kodepolirs'] = kodepolirs;

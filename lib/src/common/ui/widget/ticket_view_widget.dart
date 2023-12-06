@@ -81,7 +81,6 @@ class _TicketViewWidgetState extends State<TicketViewWidget> {
                         itemCount: _tiket.length,
                         itemBuilder: (context, i) {
                           AntrianSqlliteModel ticket = _tiket[i];
-
                           return Padding(
                             padding:
                                 const EdgeInsets.only(bottom: 28.0, top: 8.0),
@@ -160,6 +159,13 @@ class _TicketViewWidgetState extends State<TicketViewWidget> {
                                           height: 22.0,
                                         ),
                                         RowTicketWidget(
+                                          title: 'Nomor antrian poli',
+                                          text: '${ticket.nomorantreanpoli}',
+                                        ),
+                                        const SizedBox(
+                                          height: 22.0,
+                                        ),
+                                        RowTicketWidget(
                                           title: 'NIK',
                                           text: '${ticket.nik}',
                                         ),
@@ -189,11 +195,13 @@ class _TicketViewWidgetState extends State<TicketViewWidget> {
                                         ),
                                         RowTicketWidget(
                                           title: 'Tanggal kunjungan',
-                                          text: _format.format(
-                                            DateTime.parse(
-                                              ticket.tanggalperiksa!,
-                                            ),
-                                          ),
+                                          text: ticket.tanggalperiksa == null
+                                              ? '-'
+                                              : _format.format(
+                                                  DateTime.parse(
+                                                    '${ticket.tanggalperiksa}',
+                                                  ),
+                                                ),
                                         ),
                                         const SizedBox(
                                           height: 32.0,
@@ -334,14 +342,15 @@ class _StreamFirebaseTiketWidgetState extends State<StreamFirebaseTiketWidget> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Nomor Antrian',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: kLightTextColor),
                         ),
                         Text(
                           '${widget.namaPoli}',
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w600, color: Colors.white),
+                          style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              color: kLightTextColor),
                         )
                       ],
                     ),
@@ -350,9 +359,9 @@ class _StreamFirebaseTiketWidgetState extends State<StreamFirebaseTiketWidget> {
                 ],
               );
             }
-            return Row(
+            return const Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 CircleAvatar(
                   backgroundColor: Colors.transparent,
                   radius: 18.0,
@@ -373,22 +382,26 @@ class _StreamFirebaseTiketWidgetState extends State<StreamFirebaseTiketWidget> {
   Widget _nomorAntrianWidget(
       BuildContext context, FirestoreAntrianPoliModel? jadwal) {
     if (jadwal == null) {
-      return const Text(
+      return Text(
         '000',
         style: TextStyle(
-            fontSize: 18.0, fontWeight: FontWeight.w600, color: Colors.white),
+            fontSize: 18.0,
+            fontWeight: FontWeight.w600,
+            color: kLightTextColor),
       );
     } else if (jadwal.tanggal != _format.format(DateTime.now())) {
-      return const Text(
+      return Text(
         '000',
         style: TextStyle(
-            fontSize: 18.0, fontWeight: FontWeight.w600, color: Colors.white),
+            fontSize: 18.0,
+            fontWeight: FontWeight.w600,
+            color: kLightTextColor),
       );
     }
     return Text(
       jadwal.nomor,
-      style: const TextStyle(
-          fontSize: 18.0, fontWeight: FontWeight.w600, color: Colors.white),
+      style: TextStyle(
+          fontSize: 18.0, fontWeight: FontWeight.w600, color: kLightTextColor),
     );
   }
 }

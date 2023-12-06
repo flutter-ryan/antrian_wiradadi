@@ -1,43 +1,37 @@
-import 'dart:io';
-
 import 'package:antrian_wiradadi/src/repositories/responseApi/api_exception.dart';
-import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 
 class DioHelper {
   late Dio dio;
-  String url = 'http://103.164.115.10:89';
+  String urlProd = 'https://simgos.rsuwiradadihusada.co.id';
+  String urlDev = 'http://103.165.58.108';
+  bool dev = true;
 
   DioHelper() {
+    var url = dev ? urlDev : urlProd;
     BaseOptions options = BaseOptions(
       baseUrl: '$url/webservice/registrasionline/plugins/',
       headers: {
         "Accept": "application/json",
       },
-      connectTimeout: 60000,
-      receiveTimeout: 60000,
+      connectTimeout: const Duration(milliseconds: 6000),
+      receiveTimeout: const Duration(milliseconds: 6000),
     );
     dio = Dio(options);
-    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-        (HttpClient client) {
-      client.badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-      return client;
-    };
   }
 
   Future<dynamic> get(String url, String token) async {
     dynamic responseJson;
     try {
-      dio.options.headers['x-token'] = token;
+      dio.options.headers['X-token'] = token;
       final response = await dio.get(url);
       responseJson = response.data;
-    } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         throw BadRequestException("Server unreachable...connection timeout");
-      } else if (e.type == DioErrorType.receiveTimeout) {
+      } else if (e.type == DioExceptionType.receiveTimeout) {
         throw BadRequestException("Server unreachable...receive timeout");
-      } else if (e.type == DioErrorType.response) {
+      } else if (e.type == DioExceptionType.badResponse) {
         _returnResponse(e.response);
       }
       throw ErrorNoCodeException("Server unreachable");
@@ -51,17 +45,17 @@ class DioHelper {
     dynamic responseJson;
     try {
       if (type) {
-        dio.options.headers['x-token'] = token;
+        dio.options.headers['X-Token'] = token;
       }
       dio.options.headers['Content-Type'] = 'application/json';
       final response = await dio.post(url, data: request);
       responseJson = response.data;
-    } on DioError catch (e) {
-      if (e.type == DioErrorType.connectTimeout) {
+    } on DioException catch (e) {
+      if (e.type == DioExceptionType.connectionTimeout) {
         throw BadRequestException("Server unreachable...connection timeout");
-      } else if (e.type == DioErrorType.receiveTimeout) {
+      } else if (e.type == DioExceptionType.receiveTimeout) {
         throw BadRequestException("Server unreachable...receive timeout");
-      } else if (e.type == DioErrorType.response) {
+      } else if (e.type == DioExceptionType.badResponse) {
         _returnResponse(e.response);
       }
       throw ErrorNoCodeException("Server unreachable");

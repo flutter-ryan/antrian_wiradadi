@@ -54,7 +54,7 @@ class _HomepageState extends State<Homepage> {
         if (info.updateAvailability == UpdateAvailability.updateAvailable) {
           InAppUpdate.startFlexibleUpdate().catchError(
             (e) {
-              //
+              throw (e.toString());
             },
           );
         }
@@ -230,16 +230,16 @@ class _StreamPosAntrianState extends State<StreamPosAntrian> {
         name: 'AntrianPosWidget',
         options: Platform.isAndroid
             ? const FirebaseOptions(
-                appId: '1:32161464906:android:da07c1cc2905cab17cdcb3',
-                apiKey: 'AIzaSyDiZNB5KkGypDSP3OIjL8QqkBjYT9UNRak',
-                messagingSenderId: '32161464906',
-                projectId: 'antrian-pos-4368d',
+                appId: '1:576235641403:android:9fc99bc25c3e61b19c9a1e',
+                apiKey: 'AIzaSyDQQ8Reeg2oEOXuorgpYipOqklvzrioSH8',
+                messagingSenderId: '576235641403',
+                projectId: 'antrian-pos-59367',
               )
             : const FirebaseOptions(
-                appId: '1:32161464906:ios:9df08e608768f8747cdcb3',
-                apiKey: 'AIzaSyCNInFdL_01PwN4E2EBRj022MyhuV8SrY0',
-                messagingSenderId: '32161464906',
-                projectId: 'antrian-pos-4368d',
+                appId: '1:576235641403:ios:3f57e9c254f194399c9a1e',
+                apiKey: 'AIzaSyC0XfZ-maZer4YsCTYzh9PxrMs_JYBXzek',
+                messagingSenderId: '576235641403',
+                projectId: 'antrian-pos-59367',
               ),
       );
     } on FirebaseException catch (e) {

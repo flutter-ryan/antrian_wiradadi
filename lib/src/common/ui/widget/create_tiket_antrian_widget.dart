@@ -67,7 +67,7 @@ class _CreateTiketAntrianWidgetState extends State<CreateTiketAntrianWidget> {
               );
           }
         }
-        return Column(
+        return const Column(
           mainAxisSize: MainAxisSize.min,
         );
       },
@@ -101,7 +101,19 @@ class _StreamPendaftaranPasienState extends State<StreamPendaftaranPasien> {
   @override
   void initState() {
     super.initState();
-    _saveTiket();
+    _cekTiket();
+  }
+
+  Future<void> _cekTiket() async {
+    bool result = await _dbHelper.selectRow(widget.response.kodebooking!);
+    if (!result) {
+      _saveTiket();
+    } else {
+      setState(() {
+        _isLoading = false;
+        _isSuccess = true;
+      });
+    }
   }
 
   Future<void> _saveTiket() async {
@@ -114,7 +126,7 @@ class _StreamPendaftaranPasienState extends State<StreamPendaftaranPasien> {
       nohp: widget.response.nohp,
       kodepoli: widget.response.kodepoli,
       namapoli: widget.response.namapoli,
-      norm: widget.response.norm,
+      norm: widget.response.norm.toString(),
       nama: widget.response.nama,
       tanggalperiksa: widget.response.tanggalperiksa,
       kodedokter: widget.response.kodedokter,
@@ -122,13 +134,14 @@ class _StreamPendaftaranPasienState extends State<StreamPendaftaranPasien> {
       jampraktek: widget.response.jampraktek,
       jeniskunjungan: widget.response.jeniskunjungan,
       nomorreferensi: widget.response.nomorreferensi,
-      nomorantrean: widget.response.nomorantrean,
+      nomorantreanpoli: widget.response.antreanpoli,
       estimasidilayani: widget.response.estimasidilayani,
       kodepolirs: widget.response.kodepolirs,
       keterangan: widget.response.keterangan,
       tanggaldaftar: _format.format(
         DateTime.now(),
       ),
+      nomorantrean: widget.response.nomorantrean,
     );
     int? result = await _dbHelper.createTiket(tiket);
     setState(() {
@@ -173,7 +186,7 @@ class _StreamPendaftaranPasienState extends State<StreamPendaftaranPasien> {
                         (_) => false),
                     style: TextButton.styleFrom(
                       backgroundColor: kSecondaryColor,
-                      foregroundColor: kLightTextColor,
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0),
                       ),

@@ -107,7 +107,6 @@ class Antrian {
     this.nohp,
     this.kodepoli,
     this.namapoli,
-    this.pasienbaru,
     this.norm,
     this.nama,
     this.tanggalperiksa,
@@ -120,11 +119,8 @@ class Antrian {
     this.angkaantrean,
     this.estimasidilayani,
     this.kodepolirs,
-    this.sisakuotajkn,
-    this.kuotajkn,
-    this.sisakuotanonjkn,
-    this.kuotanonjkn,
     this.keterangan,
+    this.antreanpoli,
   });
 
   String? kodebooking;
@@ -134,8 +130,7 @@ class Antrian {
   String? nohp;
   String? kodepoli;
   String? namapoli;
-  String? pasienbaru;
-  String? norm;
+  dynamic norm;
   String? nama;
   String? tanggalperiksa;
   String? kodedokter;
@@ -147,11 +142,8 @@ class Antrian {
   String? angkaantrean;
   int? estimasidilayani;
   String? kodepolirs;
-  int? sisakuotajkn;
-  String? kuotajkn;
-  int? sisakuotanonjkn;
-  int? kuotanonjkn;
   String? keterangan;
+  String? antreanpoli;
 
   factory Antrian.fromJson(Map<String, dynamic> json) => Antrian(
         kodebooking: json["kodebooking"],
@@ -161,10 +153,9 @@ class Antrian {
         nohp: json["nohp"],
         kodepoli: json["kodepoli"],
         namapoli: json["namapoli"],
-        pasienbaru: json["pasienbaru"],
         norm: json["norm"],
         nama: json["nama"],
-        tanggalperiksa: json["tanggalperiksa"],
+        tanggalperiksa: json["tanggalkunjungan"],
         kodedokter: json["kodedokter"],
         namadokter: json["namadokter"],
         jampraktek: json["jampraktek"],
@@ -173,11 +164,8 @@ class Antrian {
         nomorantrean: json["nomorantrean"],
         angkaantrean: json["angkaantrean"],
         estimasidilayani: json["estimasidilayani"],
-        sisakuotajkn: json["sisakuotajkn"],
-        kuotajkn: json["kuotajkn"],
-        sisakuotanonjkn: json["sisakuotanonjkn"],
-        kuotanonjkn: json["kuotanonjkn"],
         kodepolirs: json["kodepolirs"],
         keterangan: json["keterangan"],
+        antreanpoli: json["antreanpoli"],
       );
 }

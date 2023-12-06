@@ -218,7 +218,7 @@ class _InputTextSelectState extends State<InputTextSelect> {
                 );
             }
           }
-          return Column(
+          return const Column(
             mainAxisSize: MainAxisSize.min,
           );
         },
@@ -452,7 +452,7 @@ class _StreamCaraBayarState extends State<StreamCaraBayar> {
               );
           }
         }
-        return Column(
+        return const Column(
           mainAxisSize: MainAxisSize.min,
         );
       },

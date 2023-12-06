@@ -119,7 +119,13 @@ class _PasienLamaFormWidgetState extends State<PasienLamaFormWidget> {
         },
         duration: const Duration(milliseconds: 500),
         animationType: DialogTransitionType.slideFromBottomFade,
-      );
+      ).then((value) {
+        if (value != null) {
+          var nomor = value as String;
+          _noRefCon.text = nomor;
+          setState(() {});
+        }
+      });
     } else {
       Fluttertoast.showToast(
         msg: 'Silahkan menginput Nomor BPJS Anda',
@@ -360,8 +366,8 @@ class _PasienLamaFormWidgetState extends State<PasienLamaFormWidget> {
                       nextFocus: FocusNode(),
                       isBpjs: true,
                       isRujukan: true,
-                      keyAction: TextInputAction.next,
                       keyType: TextInputType.text,
+                      keyAction: TextInputAction.next,
                       sink: widget.pendaftaranPasienBloc.noRefSink,
                       stream: widget.pendaftaranPasienBloc.noRefStream,
                       isSuffix: true,
@@ -420,7 +426,7 @@ class _PasienLamaFormWidgetState extends State<PasienLamaFormWidget> {
               );
           }
         }
-        return Column(
+        return const Column(
           mainAxisSize: MainAxisSize.min,
         );
       },
@@ -470,7 +476,7 @@ class _PasienLamaFormWidgetState extends State<PasienLamaFormWidget> {
               );
           }
         }
-        return Column(
+        return const Column(
           mainAxisSize: MainAxisSize.min,
         );
       },
@@ -608,7 +614,7 @@ class _ListRujukanState extends State<ListRujukan> {
               );
           }
         }
-        return Column(
+        return const Column(
           mainAxisSize: MainAxisSize.min,
         );
       },
@@ -711,7 +717,7 @@ class _SecondStreamRujukanState extends State<SecondStreamRujukan> {
               );
           }
         }
-        return Column(
+        return const Column(
           mainAxisSize: MainAxisSize.min,
         );
       },
@@ -732,20 +738,42 @@ class StreamResultRujukan extends StatefulWidget {
 }
 
 class _StreamResultRujukanState extends State<StreamResultRujukan> {
+  final _tanggal = DateFormat('dd MMM yyyy', 'id');
   @override
   Widget build(BuildContext context) {
-    return ListView.separated(
-      itemBuilder: (context, i) {
-        var data = widget.data![i];
-        return ListTile(
-          title: Text('${data.noKunjungan}'),
-          subtitle: Text('${data.poliRujukan!.nama}'),
-        );
-      },
-      separatorBuilder: (context, i) => const SizedBox(
-        height: 18.0,
-      ),
-      itemCount: widget.data!.length,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 18.0, vertical: 22.0),
+          child: Text(
+            'Daftar Rujukan',
+            style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w600),
+          ),
+        ),
+        const Divider(
+          height: 0.0,
+        ),
+        ListView.separated(
+          padding: const EdgeInsets.only(bottom: 22.0),
+          shrinkWrap: true,
+          itemBuilder: (context, i) {
+            var data = widget.data![i];
+            return ListTile(
+              onTap: () => Navigator.pop(context, data.noKunjungan),
+              title: Text(
+                _tanggal.format(data.tglKunjungan!),
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
+              subtitle: Text(
+                  '${data.peserta!.nama} / ${data.poliRujukan!.nama} / ${data.noKunjungan}'),
+            );
+          },
+          separatorBuilder: (context, i) => const Divider(),
+          itemCount: widget.data!.length,
+        ),
+      ],
     );
   }
 }

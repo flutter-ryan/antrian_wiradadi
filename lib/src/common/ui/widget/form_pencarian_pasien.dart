@@ -80,7 +80,7 @@ class _FormPencarianPasienState extends State<FormPencarianPasien> {
               );
           }
         }
-        return Column(
+        return const Column(
           mainAxisSize: MainAxisSize.min,
         );
       },
@@ -311,9 +311,9 @@ class _ResultPencarianPasienState extends State<ResultPencarianPasien> {
                       children: [
                         Row(
                           children: [
-                            Column(
+                            const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text(
                                   'Norm',
                                   style: TextStyle(fontSize: 16.0),
@@ -331,9 +331,9 @@ class _ResultPencarianPasienState extends State<ResultPencarianPasien> {
                             const SizedBox(
                               width: 12.0,
                             ),
-                            Column(
+                            const Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
+                              children: [
                                 Text(
                                   ':',
                                   style: TextStyle(fontSize: 16.0),
@@ -408,7 +408,7 @@ class _ResultPencarianPasienState extends State<ResultPencarianPasien> {
               );
           }
         }
-        return Column(
+        return const Column(
           mainAxisSize: MainAxisSize.min,
         );
       },

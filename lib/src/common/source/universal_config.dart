@@ -7,4 +7,4 @@ const kPrimaryDarkColor = Color(0xFF00446F);
 const kTextColor = Colors.black;
 final kLightTextColor = Colors.grey[800];
 const kBackgroundLogo = Colors.transparent;
-const String namaRs = "RSU Wiradadi Husada";
+const String namaRs = "RSU Wiradadi Husada\nOnline";

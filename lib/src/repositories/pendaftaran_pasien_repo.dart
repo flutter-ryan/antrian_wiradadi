@@ -6,6 +6,7 @@ class PendaftaranPasienRepo {
       PendaftaranPasienModel pendaftaranPasienModel, String token) async {
     final response = await dio.post('createAntrian',
         pendaftaranPasienModelToJson(pendaftaranPasienModel), true, token);
+    print(response);
     return responsePendaftaranPasienModelFromJson(response);
   }
 }

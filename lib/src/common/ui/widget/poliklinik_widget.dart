@@ -575,7 +575,7 @@ class _ListPoliWidgetState extends State<ListPoliWidget> {
               );
           }
         }
-        return Column(
+        return const Column(
           mainAxisSize: MainAxisSize.min,
         );
       },
@@ -657,10 +657,10 @@ class DokterHafisWidgetState extends State<JadwalDokterHafisWidget> {
               );
             case Status.completed:
               if (!snapshot.data!.data!.success!) {
-                return Column(
+                return const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     StreamResponse(
                       image: 'images/server_error_1.png',
                       message: 'Jadwal dokter tidak tersedia',
@@ -766,7 +766,7 @@ class DokterHafisWidgetState extends State<JadwalDokterHafisWidget> {
               );
           }
         }
-        return Column(
+        return const Column(
           mainAxisSize: MainAxisSize.min,
         );
       },

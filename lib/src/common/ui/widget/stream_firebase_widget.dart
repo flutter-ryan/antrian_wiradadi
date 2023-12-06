@@ -32,9 +32,9 @@ class _StreamFirebaseWidgetState extends State<StreamFirebaseWidget> {
               color: kSecondaryColor,
               borderRadius: BorderRadius.circular(8.0),
             ),
-            child: Column(
+            child: const Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: const [
+              children: [
                 Icon(
                   Icons.no_sim_rounded,
                   size: 18.0,

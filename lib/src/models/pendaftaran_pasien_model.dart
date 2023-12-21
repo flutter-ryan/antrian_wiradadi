@@ -101,71 +101,35 @@ class Metadata {
 class Antrian {
   Antrian({
     this.kodebooking,
-    this.jenispasien,
-    this.nomorkartu,
-    this.nik,
-    this.nohp,
-    this.kodepoli,
     this.namapoli,
-    this.norm,
     this.nama,
     this.tanggalperiksa,
-    this.kodedokter,
-    this.namadokter,
     this.jampraktek,
-    this.jeniskunjungan,
-    this.nomorreferensi,
     this.nomorantrean,
-    this.angkaantrean,
     this.estimasidilayani,
-    this.kodepolirs,
-    this.keterangan,
     this.antreanpoli,
+    this.namadokter,
   });
 
   String? kodebooking;
-  String? jenispasien;
-  String? nomorkartu;
-  String? nik;
-  String? nohp;
-  String? kodepoli;
   String? namapoli;
-  dynamic norm;
   String? nama;
   String? tanggalperiksa;
-  String? kodedokter;
-  String? namadokter;
   String? jampraktek;
-  int? jeniskunjungan;
-  String? nomorreferensi;
   String? nomorantrean;
-  String? angkaantrean;
-  int? estimasidilayani;
-  String? kodepolirs;
-  String? keterangan;
+  String? estimasidilayani;
   String? antreanpoli;
+  String? namadokter;
 
   factory Antrian.fromJson(Map<String, dynamic> json) => Antrian(
         kodebooking: json["kodebooking"],
-        jenispasien: json["jenispasien"],
-        nomorkartu: json["nomorkartu"],
-        nik: json["nik"],
-        nohp: json["nohp"],
-        kodepoli: json["kodepoli"],
         namapoli: json["namapoli"],
-        norm: json["norm"],
         nama: json["nama"],
-        tanggalperiksa: json["tanggalkunjungan"],
-        kodedokter: json["kodedokter"],
-        namadokter: json["namadokter"],
-        jampraktek: json["jampraktek"],
-        jeniskunjungan: json["jeniskunjungan"],
-        nomorreferensi: json["nomorreferensi"],
+        tanggalperiksa: json["tanggalperiksa"],
+        jampraktek: json["jampraktekdpjp"],
         nomorantrean: json["nomorantrean"],
-        angkaantrean: json["angkaantrean"],
-        estimasidilayani: json["estimasidilayani"],
-        kodepolirs: json["kodepolirs"],
-        keterangan: json["keterangan"],
+        estimasidilayani: json["estimasijampelayanan"],
         antreanpoli: json["antreanpoli"],
+        namadokter: json["namadokter"],
       );
 }

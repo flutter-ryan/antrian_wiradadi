@@ -3,9 +3,10 @@ import 'package:antrian_wiradadi/src/repositories/dio_helper.dart';
 
 class JadwalHafisRepo {
   Future<JadwalDokterHafisModel> getJadwalHafis(
-      String? poli, String? tanggal, String token) async {
-    final response =
-        await dio.get('getJadwalDokterHfis?POLI=$poli&TANGGAL=$tanggal', token);
+      String? penjamin, String? tanggal, String? token) async {
+    // key get POLI berubah jadi PENJAMIN
+    final response = await dio.get(
+        'getJadwalDokterHfis?PENJAMIN=$penjamin&TANGGAL=$tanggal', '$token');
     return jadwalDokterHafisModelFromJson(response);
   }
 }

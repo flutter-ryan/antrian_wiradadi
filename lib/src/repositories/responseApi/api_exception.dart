@@ -31,7 +31,8 @@ class InvalidInputException extends ApiException {
 }
 
 class ErrorNoCodeException extends ApiException {
-  ErrorNoCodeException([String? message]) : super(message, "Error peer:\n");
+  ErrorNoCodeException([String? message])
+      : super(message, "Server Unreachable:\n");
 }
 
 class DeviceNotRegistered extends ApiException {

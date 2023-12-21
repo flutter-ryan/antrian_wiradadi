@@ -45,77 +45,80 @@ class ResponseCariPasienModel {
 class Pasien {
   String? norm;
   String? nama;
-  String? panggilan;
-  String? gelarDepan;
-  String? gelarBelakang;
-  String? tempatLahir;
   String? tanggalLahir;
-  String? jenisKelamin;
-  String? alamat;
-  String? rt;
-  String? rw;
-  String? kodepos;
-  String? wilayah;
-  String? agama;
-  String? pendidikan;
-  String? pekerjaan;
-  String? statusPerkawinan;
-  String? golonganDarah;
-  String? kewarganegaraan;
-  String? suku;
-  String? tanggal;
-  String? oleh;
-  String? status;
+  List<KartuIdentitas>? kartuIdentitas;
+  List<KartuAsuransi>? kartuAsuransi;
+  List<KontakPasien>? kontakPasien;
 
   Pasien({
     this.norm,
     this.nama,
-    this.panggilan,
-    this.gelarDepan,
-    this.gelarBelakang,
-    this.tempatLahir,
     this.tanggalLahir,
-    this.jenisKelamin,
-    this.alamat,
-    this.rt,
-    this.rw,
-    this.kodepos,
-    this.wilayah,
-    this.agama,
-    this.pendidikan,
-    this.pekerjaan,
-    this.statusPerkawinan,
-    this.golonganDarah,
-    this.kewarganegaraan,
-    this.suku,
-    this.tanggal,
-    this.oleh,
-    this.status,
+    this.kartuIdentitas,
+    this.kartuAsuransi,
+    this.kontakPasien,
   });
 
   factory Pasien.fromJson(Map<String, dynamic> json) => Pasien(
         norm: json["NORM"],
         nama: json["NAMA"],
-        panggilan: json["PANGGILAN"],
-        gelarDepan: json["GELAR_DEPAN"],
-        gelarBelakang: json["GELAR_BELAKANG"],
-        tempatLahir: json["TEMPAT_LAHIR"],
         tanggalLahir: json["TANGGAL_LAHIR"],
-        jenisKelamin: json["JENIS_KELAMIN"],
-        alamat: json["ALAMAT"],
-        rt: json["RT"],
-        rw: json["RW"],
-        kodepos: json["KODEPOS"],
-        wilayah: json["WILAYAH"],
-        agama: json["AGAMA"],
-        pendidikan: json["PENDIDIKAN"],
-        pekerjaan: json["PEKERJAAN"],
-        statusPerkawinan: json["STATUS_PERKAWINAN"],
-        golonganDarah: json["GOLONGAN_DARAH"],
-        kewarganegaraan: json["KEWARGANEGARAAN"],
-        suku: json["SUKU"],
-        tanggal: json["TANGGAL"],
-        oleh: json["OLEH"],
-        status: json["STATUS"],
+        kartuIdentitas: json.containsKey("KARTUIDENTITAS")
+            ? List<KartuIdentitas>.from(
+                json["KARTUIDENTITAS"].map((x) => KartuIdentitas.fromJson(x)))
+            : null,
+        kartuAsuransi: json.containsKey("KARTUASURANSI")
+            ? List<KartuAsuransi>.from(
+                json["KARTUASURANSI"].map((x) => KartuAsuransi.fromJson(x)))
+            : null,
+        kontakPasien: json.containsKey("KONTAK")
+            ? List<KontakPasien>.from(
+                json["KONTAK"].map((x) => KontakPasien.fromJson(x)))
+            : null,
+      );
+}
+
+class KartuIdentitas {
+  String? jenis;
+  String? nomor;
+
+  KartuIdentitas({
+    this.jenis,
+    this.nomor,
+  });
+
+  factory KartuIdentitas.fromJson(Map<String, dynamic> json) => KartuIdentitas(
+        jenis: json["JENIS"],
+        nomor: json["NOMOR"],
+      );
+}
+
+class KartuAsuransi {
+  String? jenis;
+  String? nomor;
+
+  KartuAsuransi({
+    this.jenis,
+    this.nomor,
+  });
+
+  factory KartuAsuransi.fromJson(Map<String, dynamic> json) => KartuAsuransi(
+        jenis: json["JENIS"],
+        nomor: json["NOMOR"],
+      );
+}
+
+class KontakPasien {
+  String? jenis;
+  String? nomor;
+
+  KontakPasien({
+    this.jenis,
+    this.nomor,
+  });
+
+  factory KontakPasien.fromJson(Map<String, dynamic> json) => KontakPasien(
+        jenis: json["JENIS"],
+        nomor: json["NOMOR"],
       );
 }

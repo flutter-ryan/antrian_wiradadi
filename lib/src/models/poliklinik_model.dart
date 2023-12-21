@@ -67,14 +67,17 @@ class Poliklinik {
 class Referensi {
   Referensi({
     this.penjamin,
+    this.penjaminRuangan,
   });
 
   Penjamin? penjamin;
+  String? penjaminRuangan;
 
   factory Referensi.fromJson(Map<String, dynamic> json) => Referensi(
         penjamin: json["PENJAMIN"] == null
             ? null
             : Penjamin.fromJson(json["PENJAMIN"]),
+        penjaminRuangan: json["PENJAMIN_RUANGAN"],
       );
 }
 

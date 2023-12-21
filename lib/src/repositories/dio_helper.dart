@@ -1,29 +1,35 @@
+import 'dart:io';
+
+import 'package:antrian_wiradadi/src/confg/style.dart';
 import 'package:antrian_wiradadi/src/repositories/responseApi/api_exception.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 
 class DioHelper {
   late Dio dio;
-  String urlProd = 'https://simgos.rsuwiradadihusada.co.id';
-  String urlDev = 'http://103.165.58.108';
-  bool dev = true;
 
   DioHelper() {
-    var url = dev ? urlDev : urlProd;
     BaseOptions options = BaseOptions(
-      baseUrl: '$url/webservice/registrasionline/plugins/',
+      baseUrl: '$baseUrl/webservice/registrasionline/plugins/',
       headers: {
         "Accept": "application/json",
       },
-      connectTimeout: const Duration(milliseconds: 6000),
-      receiveTimeout: const Duration(milliseconds: 6000),
+      connectTimeout: const Duration(milliseconds: 60000),
+      receiveTimeout: const Duration(milliseconds: 60000),
     );
     dio = Dio(options);
+    dio.httpClientAdapter = IOHttpClientAdapter(createHttpClient: () {
+      final client = HttpClient();
+      client.badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+      return client;
+    });
   }
 
   Future<dynamic> get(String url, String token) async {
     dynamic responseJson;
     try {
-      dio.options.headers['X-token'] = token;
+      dio.options.headers['x-token'] = token;
       final response = await dio.get(url);
       responseJson = response.data;
     } on DioException catch (e) {
@@ -34,7 +40,7 @@ class DioHelper {
       } else if (e.type == DioExceptionType.badResponse) {
         _returnResponse(e.response);
       }
-      throw ErrorNoCodeException("Server unreachable");
+      throw ErrorNoCodeException("Terjadi kesalahan...Coba beberapa saat lagi");
     }
 
     return responseJson;
@@ -45,7 +51,7 @@ class DioHelper {
     dynamic responseJson;
     try {
       if (type) {
-        dio.options.headers['X-Token'] = token;
+        dio.options.headers['x-token'] = token;
       }
       dio.options.headers['Content-Type'] = 'application/json';
       final response = await dio.post(url, data: request);
@@ -58,7 +64,7 @@ class DioHelper {
       } else if (e.type == DioExceptionType.badResponse) {
         _returnResponse(e.response);
       }
-      throw ErrorNoCodeException("Server unreachable");
+      throw ErrorNoCodeException("Terjadi kesalahan...Coba beberapa saat lagi");
     }
     return responseJson;
   }

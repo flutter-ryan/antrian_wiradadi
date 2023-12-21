@@ -4,7 +4,7 @@ import 'package:antrian_wiradadi/src/repositories/dio_helper.dart';
 class PendaftaranPasienRepo {
   Future<ResponsePendaftaranPasienModel> daftarPasien(
       PendaftaranPasienModel pendaftaranPasienModel, String token) async {
-    final response = await dio.post('createAntrian',
+    final response = await dio.post('createAntrianWeb',
         pendaftaranPasienModelToJson(pendaftaranPasienModel), true, token);
     print(response);
     return responsePendaftaranPasienModelFromJson(response);

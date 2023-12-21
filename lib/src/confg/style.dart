@@ -1,0 +1,22 @@
+import 'package:flutter/material.dart';
+
+bool isDev = false;
+const kPrimaryColor = Color(0xFFAB2328);
+const kSecondaryColor = Color(0xFFFADF1E);
+const kPrimaryLightColor = Color.fromARGB(255, 167, 67, 70);
+const kPrimaryDarkColor = Color.fromARGB(255, 119, 2, 4);
+const kTextColor = Colors.white;
+final kLightTextColor = Colors.grey[200];
+const kBackgroundLogo = Colors.transparent;
+const kIconColor = Colors.red;
+const textColorPasienBaru = Colors.black;
+const kTextGreetingsColor = Colors.white;
+const kCardLightColor = Color(0xFFf0faff);
+const String namaRs = "RSU Wiradadi Husada\nOnline";
+final String baseUrl = isDev ? devUrl : prodUrl;
+final String tokenUser = isDev ? userDev : "8888";
+final String tokenPass = isDev ? passDev : "6RIVNP8U5A";
+const String userDev = "8888";
+const String passDev = "UA69488EUX";
+const String devUrl = "http://regonline.rsuwiradadihusada.co.id";
+const String prodUrl = "https://simgos.rsuwiradadihusada.co.id";

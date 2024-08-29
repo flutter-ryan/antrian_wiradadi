@@ -1,7 +1,7 @@
 import 'package:antrian_wiradadi/src/confg/style.dart';
+import 'package:antrian_wiradadi/src/confg/transition/animated_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:intl/intl.dart';
 
 class DateFormField extends StatefulWidget {
